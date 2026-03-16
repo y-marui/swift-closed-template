@@ -1,32 +1,32 @@
 ---
-name: Bug report
-about: Report a bug to help us improve the template
+name: バグ報告
+about: バグを報告してテンプレートの改善に役立ててください
 title: "[Bug] "
 labels: bug
 assignees: ""
 ---
 
-## Environment
+## 環境
 
-- Swift version: <!-- e.g. 5.9.2 -->
-- Xcode version: <!-- e.g. 15.4 -->
-- macOS version: <!-- e.g. 14.5 -->
-- iOS deployment target: <!-- e.g. 17.0 -->
+- Swift バージョン: <!-- 例: 5.9.2 -->
+- Xcode バージョン: <!-- 例: 15.4 -->
+- macOS バージョン: <!-- 例: 14.5 -->
+- iOS デプロイターゲット: <!-- 例: 17.0 -->
 
-## Steps to reproduce
+## 再現手順
 
 1.
 2.
 3.
 
-## Expected behavior
+## 期待する動作
 
-<!-- What did you expect to happen? -->
+<!-- どうなることを期待していましたか？ -->
 
-## Actual behavior
+## 実際の動作
 
-<!-- What actually happened? Include error messages or logs if available. -->
+<!-- 実際に何が起きましたか？エラーメッセージやログがあれば記載してください。 -->
 
-## Additional context
+## 追加情報
 
-<!-- Screenshots, related issues, or anything else that might help. -->
+<!-- スクリーンショット・関連 Issue・その他参考になる情報があれば記載してください。 -->

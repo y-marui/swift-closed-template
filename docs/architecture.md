@@ -1,10 +1,10 @@
-# Architecture
+# アーキテクチャ
 
-## Overview
+## 概要
 
-This project follows Clean Architecture principles, organized into 4 layers with strict dependency rules.
+Clean Architecture 原則に基づき、厳格な依存ルールを持つ 4 層構造で構成されています。
 
-## Layer Diagram
+## レイヤー図
 
 ```
 ┌─────────────────────────────────┐
@@ -15,13 +15,13 @@ This project follows Clean Architecture principles, organized into 4 layers with
 ┌────────────▼────────────────────┐
 │          Features               │
 │  View + ViewModel + UseCase     │
-│  (depends on Domain only)       │
+│  (Domain のみに依存)             │
 └────────────┬────────────────────┘
              │ uses protocols
 ┌────────────▼────────────────────┐
 │           Domain                │
 │  Models / Repositories / UseCases│
-│  (pure Swift, no dependencies)  │
+│  (pure Swift、依存なし)          │
 └────────────┬────────────────────┘
              │ implemented by
 ┌────────────▼────────────────────┐
@@ -30,25 +30,26 @@ This project follows Clean Architecture principles, organized into 4 layers with
 └─────────────────────────────────┘
 ```
 
-## Data Flow
+## データフロー
 
 ```
-User Action
+ユーザー操作
   → ViewModel.action()
     → UseCase.execute()
-      → Repository.fetch()   (protocol call)
-        → APIClient / SwiftData  (implementation)
+      → Repository.fetch()   (プロトコル呼び出し)
+        → APIClient / SwiftData  (実装)
       ← [DomainModel]
     ← [DomainModel]
-  ← ViewModel updates state
-View re-renders automatically via @Observable
+  ← ViewModel が state を更新
+@Observable により View が自動で再描画
 ```
 
-## ViewModel Pattern
+## ViewModel パターン
 
-All ViewModels use `@Observable` (iOS 17+):
+すべての ViewModel は `@MainActor @Observable`（iOS 17+）を使用します：
 
 ```swift
+@MainActor
 @Observable
 final class FeatureViewModel {
     private(set) var state: ViewState = .idle
@@ -62,14 +63,14 @@ final class FeatureViewModel {
 }
 ```
 
-## Dependency Injection
+## 依存注入
 
-`AppDependency` is the single source of truth for object creation.
-It is created once in `App.swift` and passed down via `init`.
+`AppDependency` はオブジェクト生成の唯一の責務を持ちます。
+`App.swift` で一度だけ生成し、`init` 経由で下位に渡します。
 
 ```swift
 // App.swift
-@State private var dependency = AppDependency()
+private let dependency = AppDependency()
 
 // AppDependency.swift
 func makeFeatureViewModel() -> FeatureViewModel {
