@@ -53,7 +53,16 @@ make bootstrap
 | `make lint` | SwiftLint を実行 |
 | `make format` | SwiftFormat を実行 |
 | `make test` | 全テストを実行 |
-| `make clean` | ビルド成果物を削除 |
+| `make build` | Xcode でビルド（`.xcodeproj` がある場合）または `swift build` |
+| `make clean` | ビルド成果物を削除（`build/`、`.build/`） |
+
+`make build` は `.xcodeproj` を自動検出し、iOS Simulator（iPhone 16）向けに `build/` へビルドします。
+デフォルトは環境変数で上書き可能です：
+
+```bash
+DESTINATION="platform=iOS Simulator,name=iPhone 15" make build
+SCHEME=MyApp make build
+```
 
 ## プロジェクト構造
 
