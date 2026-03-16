@@ -15,7 +15,8 @@ exclude: |
     yarn\.lock$|
     Gemfile\.lock$|
     Cargo\.lock$|
-    poetry\.lock$
+    poetry\.lock$|
+    docs/dev-charter/
   )
 
 repos:
@@ -66,12 +67,14 @@ repos:
         entry: '(/Users/[A-Za-z0-9_.-]+/|/home/[A-Za-z0-9_.-]+/|C:\\Users\\)'
         types_or: [text]
         # Note: exclude はファイル「パス」に対するマッチ。
-        # ファイル「内容」中の /home/runner/ 等の除外は gitleaks allowlist で担保する。
+        # セキュリティ設定ファイル自体は CI パス等を allowlist として含むため除外する。
         exclude: |
           (?x)(
             \.md$|
             docs/|
-            \.github/
+            \.github/|
+            \.gitleaks\.toml$|
+            \.pre-commit-config\.yaml$
           )
 
   # ----------------------------------------------------------------
