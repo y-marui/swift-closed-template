@@ -16,6 +16,13 @@ brew install swiftlint || brew upgrade swiftlint
 echo "📦 Installing SwiftFormat..."
 brew install swiftformat || brew upgrade swiftformat
 
+echo "📦 Installing pre-commit..."
+brew install pre-commit || brew upgrade pre-commit
+
+# Install pre-commit hooks
+echo "🔒 Installing pre-commit hooks..."
+pre-commit install
+
 # Resolve Swift packages
 echo "📦 Resolving packages (root)..."
 swift package resolve
