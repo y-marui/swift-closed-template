@@ -28,13 +28,11 @@ final class {{FeatureName}}ViewModel {
 
     // MARK: - Actions
 
-    /// 画面表示時の初回ロード（idleのときだけ実行）
     func onAppear() async {
         guard case .idle = state else { return }
         await load()
     }
 
-    /// pull-to-refresh など明示的な再取得
     func refresh() async {
         if case .loaded(let current) = state {
             state = .refreshing(current)

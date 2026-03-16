@@ -1,7 +1,6 @@
 import Foundation
 
 // MARK: - AppDependency
-// Central dependency container. Created once in App.swift, injected downward.
 // Repository・UseCase・ViewModel はすべて @MainActor のため、
 // ファクトリメソッドを @MainActor に統一する。
 
