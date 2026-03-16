@@ -95,9 +95,9 @@ Xcode の Scheme > Run > Environment Variables に設定してください。
 
 - [ ] このファイルの `<!-- TODO -->` をすべて埋める
 - [ ] `App/App.swift` の `ExampleApp` をプロジェクト名に変更する
-- [ ] `README.md` の CI バッジの URL を実際のリポジトリ URL に変更する
+- [ ] `README.md` / `README-jp.md` の CI バッジの URL を実際のリポジトリ URL に変更する
 - [ ] Xcode プロジェクトを作成し `Packages/Core` をローカルパッケージとして追加する
-- [ ] `make bootstrap` を実行してツールをインストールする
+- [ ] `make bootstrap` を実行してツールをインストールする（pre-commit hooks も自動インストールされる）
 - [ ] `make test` が通ることを確認する
-- [ ] CI が GitHub Actions で動作することを確認する
+- [ ] CI が GitHub Actions で動作することを確認する（security / lint / test の 3 ジョブ）
 - [ ] 最初の本番フィーチャーが動作したら `ExampleFeature` を削除する（手順: `docs/maintenance.md`）

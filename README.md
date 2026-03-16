@@ -1,5 +1,8 @@
 # Swift AI App Template
 
+> **This file is the English reference version.**
+> 日本語版（正本）は [README-jp.md](README-jp.md) を参照してください。
+
 ![CI](https://github.com/y-marui/swift-app-template/actions/workflows/ci.yml/badge.svg)
 
 Template optimized for small teams, AI-assisted development, and long-term maintainability.
@@ -50,7 +53,16 @@ make bootstrap
 | `make lint` | Run SwiftLint |
 | `make format` | Run SwiftFormat |
 | `make test` | Run all tests |
-| `make clean` | Clean build artifacts |
+| `make build` | Build via Xcode (if `.xcodeproj` exists) or `swift build` |
+| `make clean` | Clean build artifacts (`build/`, `.build/`) |
+
+`make build` auto-detects the `.xcodeproj` and builds for iOS Simulator (iPhone 16) into `build/`.
+Override defaults as needed:
+
+```bash
+DESTINATION="platform=iOS Simulator,name=iPhone 15" make build
+SCHEME=MyApp make build
+```
 
 ## Project Structure
 

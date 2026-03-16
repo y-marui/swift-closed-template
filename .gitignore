@@ -7,6 +7,7 @@ DerivedData/
 
 # Swift Package Manager
 .build/
+build/
 Packages/Core/.build/
 *.resolved
 

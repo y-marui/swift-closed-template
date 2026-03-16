@@ -1,10 +1,10 @@
 import SwiftUI
 
-struct {{FeatureName}}View: View {
+struct ExampleView: View {
 
-    @State private var viewModel: {{FeatureName}}ViewModel
+    @State private var viewModel: ExampleViewModel
 
-    init(viewModel: {{FeatureName}}ViewModel) {
+    init(viewModel: ExampleViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
 
@@ -18,8 +18,8 @@ struct {{FeatureName}}View: View {
                 ProgressView()
 
             case .loaded(let items), .refreshing(let items):
-                List(items, id: \.self) { item in
-                    Text(item)
+                List(items) { item in
+                    Text(item.title)
                 }
                 .refreshable {
                     await viewModel.refresh()
@@ -27,20 +27,20 @@ struct {{FeatureName}}View: View {
 
             case .error(let message):
                 ContentUnavailableView(
-                    String(localized: "error.title"),
+                    String(localized: "common.error.title"),
                     systemImage: "exclamationmark.triangle",
                     description: Text(message)
                 )
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
-                        Button(String(localized: "error.retry")) {
+                        Button(String(localized: "common.retry")) {
                             Task { await viewModel.refresh() }
                         }
                     }
                 }
             }
         }
-        .navigationTitle("{{FeatureName}}")
+        .navigationTitle(String(localized: "example.title"))
         .task {
             await viewModel.onAppear()
         }

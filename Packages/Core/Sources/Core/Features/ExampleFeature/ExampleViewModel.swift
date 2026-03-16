@@ -2,31 +2,23 @@ import Foundation
 
 @MainActor
 @Observable
-final class {{FeatureName}}ViewModel {
-
-    // MARK: - State
+final class ExampleViewModel {
 
     enum ViewState {
         case idle
         case loading
-        case loaded([/* TODO: モデルに置き換える */String])
-        case refreshing([/* TODO: モデルに置き換える */String])
+        case loaded([ExampleItem])
+        case refreshing([ExampleItem])
         case error(String)
     }
 
     private(set) var state: ViewState = .idle
 
-    // MARK: - Dependencies
+    private let useCase: ExampleUseCaseProtocol
 
-    private let useCase: {{FeatureName}}UseCaseProtocol
-
-    // MARK: - Init
-
-    init(useCase: {{FeatureName}}UseCaseProtocol) {
+    init(useCase: ExampleUseCaseProtocol) {
         self.useCase = useCase
     }
-
-    // MARK: - Actions
 
     func onAppear() async {
         guard case .idle = state else { return }
@@ -39,8 +31,6 @@ final class {{FeatureName}}ViewModel {
         }
         await load()
     }
-
-    // MARK: - Private
 
     private func load() async {
         if case .idle = state { state = .loading }

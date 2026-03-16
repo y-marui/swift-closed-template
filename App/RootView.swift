@@ -1,6 +1,5 @@
 import SwiftUI
 
-// ViewModelはAppDependencyから外部で生成し、initで受け取る。
 // @MainActorメソッドをinit内で呼ぶとコンパイルエラーになるため、
 // ViewModel生成の責務はApp.swiftに置く。
 
