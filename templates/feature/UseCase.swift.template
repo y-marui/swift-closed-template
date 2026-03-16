@@ -12,7 +12,7 @@ protocol {{FeatureName}}UseCaseProtocol {
 @MainActor
 struct {{FeatureName}}UseCase: {{FeatureName}}UseCaseProtocol {
 
-    // TODO: Replace {{FeatureName}}RepositoryProtocol with your actual repository protocol
+    // TODO: {{FeatureName}}RepositoryProtocol を実際のリポジトリプロトコルに置き換える
     private let repository: {{FeatureName}}RepositoryProtocol
 
     init(repository: {{FeatureName}}RepositoryProtocol) {
@@ -20,7 +20,7 @@ struct {{FeatureName}}UseCase: {{FeatureName}}UseCaseProtocol {
     }
 
     func fetchItems() async throws -> [String] {
-        // TODO: Call repository and apply business logic
+        // TODO: リポジトリを呼び出してビジネスロジックを適用する
         return []
     }
 }

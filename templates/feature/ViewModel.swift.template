@@ -9,8 +9,8 @@ final class {{FeatureName}}ViewModel {
     enum ViewState {
         case idle
         case loading
-        case loaded([/* TODO: YourModel */String])
-        case refreshing([/* TODO: YourModel */String])
+        case loaded([/* TODO: モデルに置き換える */String])
+        case refreshing([/* TODO: モデルに置き換える */String])
         case error(String)
     }
 
