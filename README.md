@@ -1,5 +1,8 @@
 # Swift AI App Template
 
+> **This file is the English reference version.**
+> 日本語版（正本）は [README-jp.md](README-jp.md) を参照してください。
+
 ![CI](https://github.com/y-marui/swift-app-template/actions/workflows/ci.yml/badge.svg)
 
 Template optimized for small teams, AI-assisted development, and long-term maintainability.
