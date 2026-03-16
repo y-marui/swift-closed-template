@@ -1,18 +1,18 @@
 ---
-name: Feature request
-about: Suggest an improvement or new feature for the template
+name: 機能リクエスト
+about: テンプレートへの改善・新機能を提案してください
 title: "[Feature] "
 labels: enhancement
 assignees: ""
 ---
 
-## Summary
+## 概要
 
-<!-- Describe the feature you'd like in one or two sentences. -->
+<!-- 追加したい機能を 1〜2 文で説明してください。 -->
 
-## Motivation
+## 背景・動機
 
-<!-- Why is this feature useful? What problem does it solve? -->
+<!-- なぜこの機能が必要ですか？どんな問題を解決しますか？ -->
 
 ## 完了条件
 
@@ -23,14 +23,14 @@ assignees: ""
 - [ ] テストが追加されている
 -->
 
-## Proposed solution
+## 提案する解決策
 
-<!-- How would you implement it? Include code snippets if helpful. -->
+<!-- どのように実装しますか？コードスニペットがあれば記載してください。 -->
 
-## Alternatives considered
+## 検討した代替案
 
-<!-- Have you considered other approaches? Why did you rule them out? -->
+<!-- 他のアプローチを検討しましたか？採用しなかった理由も記載してください。 -->
 
-## Additional context
+## 追加情報
 
-<!-- Any other relevant information, links, or screenshots. -->
+<!-- その他の関連情報・リンク・スクリーンショットがあれば記載してください。 -->
