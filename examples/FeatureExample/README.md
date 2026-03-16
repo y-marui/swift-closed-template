@@ -191,17 +191,17 @@ struct TodoListView: View {
                 .refreshable { await viewModel.refresh() }
             case .error(let message):
                 ContentUnavailableView(
-                    "Error",
+                    String(localized: "common.error.title"),
                     systemImage: "exclamationmark.triangle",
                     description: Text(message)
                 )
             }
         }
-        .navigationTitle("Todos")
+        .navigationTitle(String(localized: "todo.list.title"))
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button("Add") {
-                    Task { await viewModel.addTodo(title: "New Todo") }
+                Button(String(localized: "todo.add.button")) {
+                    Task { await viewModel.addTodo(title: String(localized: "todo.new.placeholder")) }
                 }
             }
         }
