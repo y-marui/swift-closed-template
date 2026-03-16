@@ -14,6 +14,15 @@ assignees: ""
 
 <!-- Why is this feature useful? What problem does it solve? -->
 
+## 完了条件
+
+<!-- この Issue が完了したと判断できる条件を箇条書きで記載してください。
+例:
+- [ ] ○○画面に△△ボタンが表示される
+- [ ] ボタンをタップすると□□が実行される
+- [ ] テストが追加されている
+-->
+
 ## Proposed solution
 
 <!-- How would you implement it? Include code snippets if helpful. -->
