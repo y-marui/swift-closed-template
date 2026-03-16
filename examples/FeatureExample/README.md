@@ -51,6 +51,7 @@ import Foundation
 
 // ✅ プロトコルは Domain に置く
 // ✅ 実装は Infrastructure に置く（このファイルには書かない）
+@MainActor
 protocol TodoRepositoryProtocol {
     func fetchAll() async throws -> [Todo]
     func save(_ todo: Todo) async throws
@@ -67,12 +68,14 @@ protocol TodoRepositoryProtocol {
 ```swift
 import Foundation
 
+@MainActor
 protocol TodoListUseCaseProtocol {
     func fetchTodos() async throws -> [Todo]
     func addTodo(title: String) async throws
     func toggleDone(_ todo: Todo) async throws
 }
 
+@MainActor
 struct TodoListUseCase: TodoListUseCaseProtocol {
 
     private let repository: TodoRepositoryProtocol
@@ -107,6 +110,7 @@ struct TodoListUseCase: TodoListUseCaseProtocol {
 ```swift
 import Foundation
 
+@MainActor
 @Observable
 final class TodoListViewModel {
 
