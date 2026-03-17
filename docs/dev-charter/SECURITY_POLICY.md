@@ -17,10 +17,10 @@
 | 1 | 他人管理リポジトリはスキップ（`hooks.skip-policy-check = true`） | 全チェックをスキップ |
 | 2 | `user.name` / `user.email` が `anonymous` のまま | コミットをブロック |
 | 3 | `.env` ファイルがステージされている（`.env.example` 等は許可） | コミットをブロック |
-| 4 | SSH 秘密鍵ヘッダー（`BEGIN PRIVATE KEY` ブロック）を検知 | コミットをブロック |
+| 4 | SSH 秘密鍵ヘッダー（PEM 形式の秘密鍵ブロック）を検知 | コミットをブロック |
 | 5 | `.pre-commit-config.yaml` が存在しない | コミットをブロック |
 | 6 | `.pre-commit-config.yaml` に必須セキュリティフックが揃っていない | コミットをブロック |
-| 7 | `pre-commit install` が未実行（`.git/hooks/pre-commit` に pre-commit が含まれない） | コミットをブロック |
+| 7 | `pre-commit install` が未実行（`.git/hooks/pre-commit` に pre-commit が含まれない）かつ `core.hooksPath` が未設定 | コミットをブロック |
 
 他人管理リポジトリでスキップする場合：
 
@@ -88,10 +88,14 @@ API_KEY=your-api-key-here
 cp docs/dev-charter/.pre-commit-config.yaml .
 cp docs/dev-charter/.gitleaks.toml .
 
-# 2. pre-commit フックをインストール（初回コミット前に必須）
-pre-commit install
+# 2. pre-commit フックをインストール
+#    core.hooksPath を使用している場合（グローバルフックが pre-commit を呼ぶ場合）は
+#    pre-commit install は不要。手順 3 で pre-commit が正しく動作することを確認する。
+git config core.hooksPath 2>/dev/null \
+  && echo "core.hooksPath が設定されています。手順 3 に進んでください。" \
+  || pre-commit install
 
-# 3. 動作確認
+# 3. 動作確認（core.hooksPath の有無にかかわらず必須）
 pre-commit run --all-files
 ```
 

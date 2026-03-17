@@ -66,12 +66,14 @@ repos:
         entry: '(/Users/[A-Za-z0-9_.-]+/|/home/[A-Za-z0-9_.-]+/|C:\\Users\\)'
         types_or: [text]
         # Note: exclude はファイル「パス」に対するマッチ。
-        # ファイル「内容」中の /home/runner/ 等の除外は gitleaks allowlist で担保する。
+        # 設定ファイル自身（allowlist パターンを含む）は除外する。
         exclude: |
           (?x)(
             \.md$|
             docs/|
-            \.github/
+            \.github/|
+            \.gitleaks\.toml$|
+            \.pre-commit-config\.yaml$
           )
 
   # ----------------------------------------------------------------
