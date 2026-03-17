@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.PHONY: bootstrap lint format test build clean
+.PHONY: bootstrap lint format test build clean update-charter
 
 # .xcodeprojを自動検出。複数ある場合は XCODE_PROJECT=MyApp.xcodeproj make build で指定。
 XCODE_PROJECT := $(wildcard *.xcodeproj)
@@ -33,3 +33,6 @@ endif
 clean:
 	swift package clean
 	rm -rf .build build
+
+update-charter:
+	git subtree pull --prefix=docs/dev-charter dev-charter main --squash

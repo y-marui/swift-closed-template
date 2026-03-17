@@ -42,8 +42,8 @@ cd swift-app-template
 make bootstrap
 ```
 
-その後、Xcodeで新規iOSプロジェクトを作成し、`Packages/Core` をローカルパッケージとして追加してください。
-詳細は `Package.swift` のコメントを参照。
+Then create a new iOS App project in Xcode and add `Packages/Core` as a local package.
+See comments in `Package.swift` for details.
 
 ## Commands
 
