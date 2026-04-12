@@ -3,8 +3,9 @@
 > **このファイルは正本（日本語版）です。**
 > 英語版（参照）は [README.md](README.md) を参照してください。
 
-![CI](https://github.com/y-marui/swift-app-template/actions/workflows/ci.yml/badge.svg)
-![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red.svg)
+[![License: All Rights Reserved](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](LICENSE)
+[![CI](https://github.com/y-marui/swift-closed-template/actions/workflows/ci.yml/badge.svg)](https://github.com/y-marui/swift-closed-template/actions/workflows/ci.yml)
+[![Charter Check](https://github.com/y-marui/swift-closed-template/actions/workflows/dev-charter-check.yml/badge.svg)](https://github.com/y-marui/swift-closed-template/actions/workflows/dev-charter-check.yml)
 
 小規模チーム・AI支援開発・長期保守を前提に最適化されたテンプレートです。
 

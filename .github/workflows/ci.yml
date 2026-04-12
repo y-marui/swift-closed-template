@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   security:
-    name: Security
+    name: Security scan (pre-commit)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -54,3 +54,10 @@ jobs:
 
       - name: Run App integration tests
         run: swift test --filter AppTests
+
+  build:
+    name: Build
+    needs: [security, lint, test]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All jobs passed"
