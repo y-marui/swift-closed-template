@@ -9,6 +9,57 @@
 
 Template optimized for small teams, AI-assisted development, and long-term maintainability.
 
+## Project Overview
+
+> **When applying this template:** Replace all `<!-- TODO -->` placeholders with your project-specific information.
+
+<!-- TODO: Describe your app in 1–3 sentences. Example: "A budget tracking app that records expenses and visualizes monthly spending." -->
+
+- **App Name:** <!-- TODO: e.g. MyApp -->
+- **Bundle ID:** <!-- TODO: e.g. com.yourcompany.myapp -->
+- **Target:** iOS 17+ / macOS 14+
+- **Team Size:** <!-- TODO: e.g. Solo / 2–3 people -->
+
+### Feature List
+
+<!-- TODO: Replace with your planned or implemented features. Example:
+| Feature | Status | Description |
+|---|---|---|
+| TodoList | ✅ Done | List, add, and delete tasks |
+| Auth | 🚧 In Progress | Sign in with email |
+| Settings | 📋 Planned | Notifications and theme settings |
+-->
+
+| Feature | Status | Description |
+|---|---|---|
+| ExampleFeature | 📋 To be removed | Template sample. Delete after your first production feature is complete. |
+
+### Tech Stack
+
+| Concern | Solution |
+|---|---|
+| State management | `@Observable` (Swift 5.9+) |
+| Persistence | SwiftData <!-- TODO: remove if not needed --> |
+| Networking | URLSession + async/await <!-- TODO: remove if not needed --> |
+| Dependency Injection | Manual (AppDependency) |
+| Testing | XCTest + mocks |
+
+### Environment Variables
+
+<!-- TODO: List your environment variables, API keys, and endpoints. Example:
+| Variable | Where to set | Description |
+|---|---|---|
+| API_KEY | Xcode Scheme > Environment Variables | External service API key |
+-->
+
+| Variable | Where to set | Description |
+|---|---|---|
+| BASE_URL | Xcode Scheme > Environment Variables | API base URL |
+
+> Do not write API keys directly in code or `.env` files. Set them in Xcode under Scheme > Run > Environment Variables.
+
+---
+
 ## Use this template
 
 1. Click **"Use this template"** → **"Create a new repository"** on GitHub.
@@ -16,7 +67,18 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 3. Run `make bootstrap` to install tools and resolve packages.
 4. Open Xcode, create a new iOS App project in the repository root, then add `Packages/Core` as a local package.
 5. Replace all `Example` references with your feature name (see [AI_CONTEXT.md](AI_CONTEXT.md)).
-6. Update `PROJECT_CONTEXT.md` with your app's details.
+6. Update the **Project Overview** section above with your app's details.
+
+### Setup Checklist
+
+- [ ] Fill in all `<!-- TODO -->` placeholders in the Project Overview section
+- [ ] Update the CI badge URLs to your actual repository URL
+- [ ] Rename `ExampleApp` in `App/App.swift` to your project name
+- [ ] Create an Xcode project and add `Packages/Core` as a local package
+- [ ] Run `make bootstrap` to install tools (pre-commit hooks are installed automatically)
+- [ ] Confirm `make test` passes
+- [ ] Confirm CI works in GitHub Actions (security / lint / test jobs)
+- [ ] Delete `ExampleFeature` once your first production feature is working (see [`CONTRIBUTING.md`](CONTRIBUTING.md))
 
 ## Features
 
@@ -28,7 +90,7 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 - ✅ XCTest with mock examples
 - ✅ SwiftLint + SwiftFormat configured
 - ✅ GitHub Actions CI (lint + test)
-- ✅ AI-friendly context files (`AI_CONTEXT.md`, `PROJECT_CONTEXT.md`)
+- ✅ AI-friendly context files (`AI_CONTEXT.md`, project overview in README)
 
 ## Requirements
 
