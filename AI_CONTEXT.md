@@ -3,12 +3,21 @@
 このファイルを最初に読み、すべての実装判断の基準にしてください。
 **通常セッションでは `docs/dev-charter/` を直接読まず、このファイルのみを参照してください。**
 
+## 参照順（Reading Order）
+
+AIはプロジェクト理解のために以下の順で参照してください：
+
+1. **[README.md](README.md)** — 概要・セットアップ・コマンド・プロジェクト構造
+2. **[docs/architecture.md](docs/architecture.md)** — モジュール・コンポーネント構造・アーキテクチャ変更履歴
+3. **[docs/file-map.md](docs/file-map.md)** — ファイルレベルの依存関係
+4. **[docs/specification.md](docs/specification.md)** — 機能仕様・データフロー
+
 ## コンテキスト優先順位
 
 指示が競合する場合は以下の順で優先してください：
 
 1. **タスクコンテキスト** — Issue / Pull Request の指示（最優先）
-2. **プロジェクトコンテキスト** — このファイル（`AI_CONTEXT.md`）・`PROJECT_CONTEXT.md`
+2. **プロジェクトコンテキスト** — このファイル（`AI_CONTEXT.md`）・`README.md` のプロジェクト概要セクション
 3. **開発憲章** — `docs/dev-charter/`（通常は本ファイルに統合済み）
 4. **グローバルコンテキスト** — AI のデフォルト知識
 
@@ -66,6 +75,24 @@
 
 ---
 
+## Dependency Policy (Guardrail)
+
+依存追加前に必ず確認してください：
+
+**追加してよい依存:**
+- Apple 純正 framework の薄いラッパー（例: KeychainAccess）
+- テスト専用ライブラリ（例: Quick/Nimble）— testTarget にのみ追加
+
+**追加してはいけない依存:**
+- RxSwift / Combine ベースのライブラリ（async/await に統一）
+- 巨大な UI フレームワーク（SwiftUI に統一）
+- Domain 層に import が必要になるライブラリ
+
+依存を追加する場合は `Packages/Core/Package.swift` の該当ターゲットに追記し、
+`docs/architecture.md` の「アーキテクチャ変更履歴」セクションに理由を記録してください。
+
+---
+
 ## File Naming
 
 - `FeatureNameView.swift` — SwiftUI View
@@ -87,6 +114,28 @@
 7. Add unit tests (`@MainActor` test class) in `Packages/Core/Tests/CoreTests/`
 
 具体的な実装例は `examples/FeatureExample/README.md` を参照してください。
+
+---
+
+## Testing
+
+- Unit テストは `Packages/Core/Tests/CoreTests/` に置く
+- 依存はプロトコル経由でモックする
+- Given / When / Then 構造で書く
+
+```swift
+func test_onAppear_loadsItems() async {
+    // Given
+    let mock = MockUseCase(result: .success([...]))
+    let sut = MyViewModel(useCase: mock)
+
+    // When
+    await sut.onAppear()
+
+    // Then
+    XCTAssertEqual(...)
+}
+```
 
 ---
 
@@ -121,23 +170,14 @@
 
 ## UI Guidelines
 
-### 外観モード
-- ライト・ダーク・システムの 3 モードに対応し、ユーザーが設定から選択できるようにする
+詳細は [`docs/ui-design.md`](docs/ui-design.md) を参照してください。
 
-### カラーパレット
+### AI が守るべき UI ルール（Guardrail）
 
-| モード | 背景 | 文字 | 強調（テキスト） |
-|---|---|---|---|
-| ライト | #FFFFFF | #4e454a | #000000 |
-| ダーク | #000000 | #bab1b6 | #FFFFFF |
-
-- アクセントカラーと装飾: ライト/ダーク間で色相・彩度を維持しつつ明度を反転
-- システムカラーを優先
-- ネイティブ UI コンポーネントを優先
-
-### アイコノグラフィ
 - **SF Symbols を絶対優先** (`Image(systemName: "...")`)
 - **Unicode 絵文字禁止**: ボタン・ラベル・装飾等における使用は原則禁止（SF Symbols を使う）
+- ライト・ダーク・システムの 3 モードに対応すること
+- システムカラー・ネイティブ UI コンポーネントを優先する
 
 ---
 
@@ -247,9 +287,11 @@ AIが守るべき手動ルールのみ記載する。
 判断に迷ったときは以下の順で確認してください：
 
 1. `docs/architecture.md` — レイヤー図とデータフローを確認
-2. `examples/FeatureExample/README.md` — 具体的な実装例を確認
-3. `ExampleFeature/` の既存コード — 実際のパターンを確認
-4. それでも不明な場合は**実装を止めて質問する**（間違った方向に進まない）
+2. `docs/file-map.md` — ファイルの依存関係を確認
+3. `docs/specification.md` — 機能仕様・動作定義を確認
+4. `examples/FeatureExample/README.md` — 具体的な実装例を確認
+5. `ExampleFeature/` の既存コード — 実際のパターンを確認
+6. それでも不明な場合は**実装を止めて質問する**（間違った方向に進まない）
 
 ---
 
