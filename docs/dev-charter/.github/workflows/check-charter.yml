@@ -104,7 +104,7 @@ jobs:
             git clean -fd "${PREFIX}/"
 
             SPLIT=$(git rev-parse dev-charter/main)
-            git rm -rf "${PREFIX}/"
+            rm -rf "${PREFIX}/"
             mkdir -p "${PREFIX}"
             git archive dev-charter/main | tar -x -C "${PREFIX}/"
             git add "${PREFIX}/"
