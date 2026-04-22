@@ -86,7 +86,11 @@ scripts/                # Shell scripts
 ## Documentation
 
 - [Architecture](docs/architecture.md)
-- [Maintenance](docs/maintenance.md)
+- [Specification](docs/specification.md)
+- [UI Design](docs/ui-design.md)
+- [File Map](docs/file-map.md)
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for development workflow, naming conventions, and code review checklist.
 
 ## Runbook
 

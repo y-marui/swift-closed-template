@@ -86,7 +86,11 @@ scripts/                # シェルスクリプト
 ## ドキュメント
 
 - [アーキテクチャ](docs/architecture.md)
-- [メンテナンス](docs/maintenance.md)
+- [仕様](docs/specification.md)
+- [UI 設計](docs/ui-design.md)
+- [ファイルマップ](docs/file-map.md)
+
+開発フロー・命名規則・コードレビューチェックリストは [`CONTRIBUTING.md`](CONTRIBUTING.md) を参照してください。
 
 ## ランブック
 

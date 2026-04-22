@@ -7,9 +7,10 @@
 
 AIはプロジェクト理解のために以下の順で参照してください：
 
-1. **[README.md](README.md)** — セットアップ・コマンド・ランブック・プロジェクト構造
-2. **[docs/architecture.md](docs/architecture.md)** — レイヤー構造・データフロー・アーキテクチャ変更履歴
-3. **[docs/maintenance.md](docs/maintenance.md)** — 依存管理・コードレビューチェックリスト
+1. **[README.md](README.md)** — 概要・セットアップ・コマンド・プロジェクト構造
+2. **[docs/architecture.md](docs/architecture.md)** — モジュール・コンポーネント構造・アーキテクチャ変更履歴
+3. **[docs/file-map.md](docs/file-map.md)** — ファイルレベルの依存関係
+4. **[docs/specification.md](docs/specification.md)** — 機能仕様・データフロー
 
 ## コンテキスト優先順位
 
@@ -71,6 +72,24 @@ AIはプロジェクト理解のために以下の順で参照してください
 | ViewModel 内で `APIClient` を直接呼ぶ | UseCase 経由で呼ぶ |
 | View 内にビジネスロジックを書く | UseCase に移動する |
 | `AnyObject` / 型消去を不必要に使う | 具体的な protocol を定義する |
+
+---
+
+## Dependency Policy (Guardrail)
+
+依存追加前に必ず確認してください：
+
+**追加してよい依存:**
+- Apple 純正 framework の薄いラッパー（例: KeychainAccess）
+- テスト専用ライブラリ（例: Quick/Nimble）— testTarget にのみ追加
+
+**追加してはいけない依存:**
+- RxSwift / Combine ベースのライブラリ（async/await に統一）
+- 巨大な UI フレームワーク（SwiftUI に統一）
+- Domain 層に import が必要になるライブラリ
+
+依存を追加する場合は `Packages/Core/Package.swift` の該当ターゲットに追記し、
+`docs/architecture.md` の「アーキテクチャ変更履歴」セクションに理由を記録してください。
 
 ---
 
@@ -151,23 +170,14 @@ func test_onAppear_loadsItems() async {
 
 ## UI Guidelines
 
-### 外観モード
-- ライト・ダーク・システムの 3 モードに対応し、ユーザーが設定から選択できるようにする
+詳細は [`docs/ui-design.md`](docs/ui-design.md) を参照してください。
 
-### カラーパレット
+### AI が守るべき UI ルール（Guardrail）
 
-| モード | 背景 | 文字 | 強調（テキスト） |
-|---|---|---|---|
-| ライト | #FFFFFF | #4e454a | #000000 |
-| ダーク | #000000 | #bab1b6 | #FFFFFF |
-
-- アクセントカラーと装飾: ライト/ダーク間で色相・彩度を維持しつつ明度を反転
-- システムカラーを優先
-- ネイティブ UI コンポーネントを優先
-
-### アイコノグラフィ
 - **SF Symbols を絶対優先** (`Image(systemName: "...")`)
 - **Unicode 絵文字禁止**: ボタン・ラベル・装飾等における使用は原則禁止（SF Symbols を使う）
+- ライト・ダーク・システムの 3 モードに対応すること
+- システムカラー・ネイティブ UI コンポーネントを優先する
 
 ---
 
@@ -277,9 +287,11 @@ AIが守るべき手動ルールのみ記載する。
 判断に迷ったときは以下の順で確認してください：
 
 1. `docs/architecture.md` — レイヤー図とデータフローを確認
-2. `examples/FeatureExample/README.md` — 具体的な実装例を確認
-3. `ExampleFeature/` の既存コード — 実際のパターンを確認
-4. それでも不明な場合は**実装を止めて質問する**（間違った方向に進まない）
+2. `docs/file-map.md` — ファイルの依存関係を確認
+3. `docs/specification.md` — 機能仕様・動作定義を確認
+4. `examples/FeatureExample/README.md` — 具体的な実装例を確認
+5. `ExampleFeature/` の既存コード — 実際のパターンを確認
+6. それでも不明な場合は**実装を止めて質問する**（間違った方向に進まない）
 
 ---
 
