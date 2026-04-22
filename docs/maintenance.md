@@ -16,7 +16,7 @@ SwiftData / URLSession など Apple 純正 framework のみを使用していま
 - Domain 層に import が必要になるライブラリ
 
 依存を追加する場合は `Packages/Core/Package.swift` の該当ターゲットに追記し、
-`docs/architecture-evolution.md` に理由を記録してください。
+`docs/architecture.md` の「アーキテクチャ変更履歴」セクションに理由を記録してください。
 
 ## SwiftLint ルールの変更
 

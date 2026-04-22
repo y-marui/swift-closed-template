@@ -15,7 +15,7 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 2. Clone your new repository and `cd` into it.
 3. Run `make bootstrap` to install tools and resolve packages.
 4. Open Xcode, create a new iOS App project in the repository root, then add `Packages/Core` as a local package.
-5. Replace all `Example` references with your feature name (see `docs/development.md`).
+5. Replace all `Example` references with your feature name (see [AI_CONTEXT.md](AI_CONTEXT.md)).
 6. Update `PROJECT_CONTEXT.md` with your app's details.
 
 ## Features
@@ -86,9 +86,82 @@ scripts/                # Shell scripts
 ## Documentation
 
 - [Architecture](docs/architecture.md)
-- [Development Guide](docs/development.md)
 - [Maintenance](docs/maintenance.md)
-- [Runbook](docs/runbook.md)
+
+## Runbook
+
+### Xcode Project Setup (New)
+
+1. Xcode > File > New > Project — create an iOS App
+2. Set project name / Bundle ID and save in the repository root
+3. Xcode > File > Add Package Dependencies
+4. Select `Packages/Core` via "Add Local..."
+5. Add the `Core` library to the App target
+6. Add files in the `App/` folder to the project
+7. Confirm `make test` passes
+
+### Adding a New Feature
+
+```bash
+FEATURE=MyFeature
+mkdir -p Packages/Core/Sources/Core/Features/$FEATURE
+cp templates/feature/View.swift.template     Packages/Core/Sources/Core/Features/$FEATURE/${FEATURE}View.swift
+cp templates/feature/ViewModel.swift.template Packages/Core/Sources/Core/Features/$FEATURE/${FEATURE}ViewModel.swift
+cp templates/feature/UseCase.swift.template  Packages/Core/Sources/Core/Features/$FEATURE/${FEATURE}UseCase.swift
+```
+
+Replace `{{FeatureName}}` with your actual feature name.
+
+### Release Flow
+
+```
+feature/xxx → develop → main → tag
+```
+
+1. Develop on a `feature/xxx` branch
+2. Open a PR to `develop` (ensure CI passes)
+3. PR from `develop` → `main` before release
+4. Tag after merging to `main`
+
+```bash
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
+### Hotfix
+
+```bash
+git checkout main
+git checkout -b hotfix/issue-description
+# fix and test
+make test
+git checkout main && git merge hotfix/issue-description
+git checkout develop && git merge hotfix/issue-description
+git tag -a v1.0.1 -m "Hotfix v1.0.1"
+git push origin main develop v1.0.1
+```
+
+### CI Failures
+
+**Lint errors:**
+```bash
+make lint     # check errors
+make format   # auto-fix formatting
+make lint     # re-verify
+```
+
+**Test failures:**
+```bash
+make test                              # reproduce locally
+swift test --filter TestClassName      # run a specific test
+```
+
+**Package resolution errors:**
+```bash
+make clean
+swift package resolve --package-path Packages/Core
+make test
+```
 
 ## AI-Assisted Development
 

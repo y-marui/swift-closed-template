@@ -3,6 +3,14 @@
 このファイルを最初に読み、すべての実装判断の基準にしてください。
 **通常セッションでは `docs/dev-charter/` を直接読まず、このファイルのみを参照してください。**
 
+## 参照順（Reading Order）
+
+AIはプロジェクト理解のために以下の順で参照してください：
+
+1. **[README.md](README.md)** — セットアップ・コマンド・ランブック・プロジェクト構造
+2. **[docs/architecture.md](docs/architecture.md)** — レイヤー構造・データフロー・アーキテクチャ変更履歴
+3. **[docs/maintenance.md](docs/maintenance.md)** — 依存管理・コードレビューチェックリスト
+
 ## コンテキスト優先順位
 
 指示が競合する場合は以下の順で優先してください：
@@ -87,6 +95,28 @@
 7. Add unit tests (`@MainActor` test class) in `Packages/Core/Tests/CoreTests/`
 
 具体的な実装例は `examples/FeatureExample/README.md` を参照してください。
+
+---
+
+## Testing
+
+- Unit テストは `Packages/Core/Tests/CoreTests/` に置く
+- 依存はプロトコル経由でモックする
+- Given / When / Then 構造で書く
+
+```swift
+func test_onAppear_loadsItems() async {
+    // Given
+    let mock = MockUseCase(result: .success([...]))
+    let sut = MyViewModel(useCase: mock)
+
+    // When
+    await sut.onAppear()
+
+    // Then
+    XCTAssertEqual(...)
+}
+```
 
 ---
 
