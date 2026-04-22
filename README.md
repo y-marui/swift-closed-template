@@ -21,6 +21,7 @@ and development rules used across projects.
 | [AI_COLLABORATION_RULES.md](AI_COLLABORATION_RULES.md) | AI collaboration rules and role assignments |
 | [AI_CONTEXT_HIERARCHY.md](AI_CONTEXT_HIERARCHY.md) | AI context priority hierarchy |
 | [AI_TOOL_SETUP.md](AI_TOOL_SETUP.md) | AI context file structure spec (AI_CONTEXT.md and agent config files) |
+| [DOCS_STRUCTURE.md](DOCS_STRUCTURE.md) | Project documentation structure (root files, docs/ layout, AI_CONTEXT.md reference order) |
 | [LANGUAGE_POLICY.md](LANGUAGE_POLICY.md) | Language policy (canonical = Japanese) |
 | [LOCALIZATION_POLICY.md](LOCALIZATION_POLICY.md) | Localization and supported languages |
 | [PROJECT_LIFECYCLE.md](PROJECT_LIFECYCLE.md) | Project lifecycle and team structure |
@@ -89,7 +90,7 @@ git subtree pull --prefix=docs/dev-charter dev-charter main --squash
 > git remote add dev-charter https://github.com/y-marui/dev-charter || true
 > git fetch dev-charter
 > SPLIT=$(git rev-parse dev-charter/main)
-> git rm -rf docs/dev-charter/
+> rm -rf docs/dev-charter/
 > mkdir -p docs/dev-charter/
 > git archive dev-charter/main | tar -x -C docs/dev-charter/
 > git add docs/dev-charter/
