@@ -5,12 +5,17 @@
 
 ## 参照順（Reading Order）
 
-AIはプロジェクト理解のために以下の順で参照してください：
+AIはタスク開始時に以下の順で参照してください：
 
 1. **[README.md](README.md)** — 概要・セットアップ・コマンド・プロジェクト構造
-2. **[docs/architecture.md](docs/architecture.md)** — モジュール・コンポーネント構造・アーキテクチャ変更履歴
-3. **[docs/file-map.md](docs/file-map.md)** — ファイルレベルの依存関係
-4. **[docs/specification.md](docs/specification.md)** — 機能仕様・データフロー
+2. **[CONTRIBUTING.md](CONTRIBUTING.md)** — 開発フロー・命名規則・レビューチェックリスト
+
+必要に応じて以下を参照する（順不同）:
+
+- **[docs/architecture.md](docs/architecture.md)** — モジュール・コンポーネント構造・アーキテクチャ変更履歴
+- **[docs/file-map.md](docs/file-map.md)** — ファイルレベルの依存関係（情報が足りない・古い場合は適宜探索し、追記・更新する）
+- **[docs/specification.md](docs/specification.md)** — 機能仕様・データフロー
+- **[docs/ui-design.md](docs/ui-design.md)** — UI 設計・コンポーネント仕様
 
 ## コンテキスト優先順位
 
