@@ -8,10 +8,11 @@
 AIはタスク開始時に以下の順で参照してください：
 
 1. **[README.md](README.md)** — 概要・セットアップ・コマンド・プロジェクト構造
-2. **[CONTRIBUTING.md](CONTRIBUTING.md)** — 開発フロー・命名規則・レビューチェックリスト
+2. **[DEVELOPING.md](DEVELOPING.md)** — 開発フロー・実装規約・命名規則
 
 必要に応じて以下を参照する（順不同）:
 
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** — PR・Issue ルール・コードレビューチェックリスト
 - **[docs/architecture.md](docs/architecture.md)** — モジュール・コンポーネント構造・アーキテクチャ変更履歴
 - **[docs/file-map.md](docs/file-map.md)** — ファイルレベルの依存関係（情報が足りない・古い場合は適宜探索し、追記・更新する）
 - **[docs/specification.md](docs/specification.md)** — 機能仕様・データフロー
@@ -237,6 +238,13 @@ AIが守るべき手動ルールのみ記載する。
 
 ---
 
+## Document Sync Rule
+
+仕様・ルール・構成に変更が生じたとき、変更と同じ作業内で関連ドキュメントを更新する。
+対象は `docs/` 内のファイルに限らず、`AI_CONTEXT.md`・`README.md` 等のルートファイルも含む。
+
+---
+
 ## Git Operations
 
 - **コミット粒度**: 機能単位・動作確認 OK 後
@@ -274,6 +282,11 @@ AIが守るべき手動ルールのみ記載する。
 ### 作業スタンス
 - 大きな変更前に方針を説明してから着手する
 - 不要な依存追加禁止: 既存の依存で解決できないか先に検討する
+
+### dev-charter 変更ルール
+`docs/dev-charter/` 配下のファイルは**直接編集しない**。
+- 変更が必要な場合は dev-charter リポジトリ本体に Issue を立て、`git subtree pull` でアップデートを取り込む
+- プロジェクト固有のルールは `AI_CONTEXT.md` または専用ファイルに記載する
 
 ### AI ツールの役割分担
 | ツール | 担当 |
