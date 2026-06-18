@@ -4,13 +4,16 @@ SHELL := /bin/bash
 # .xcodeprojを自動検出。複数ある場合は XCODE_PROJECT=MyApp.xcodeproj make build で指定。
 XCODE_PROJECT := $(wildcard *.xcodeproj)
 SCHEME        ?= $(basename $(XCODE_PROJECT))
-DESTINATION   ?= platform=iOS Simulator,name=iPhone 16
+DESTINATION   ?= platform=macOS,arch=arm64
+SIM_DEST      ?= platform=iOS Simulator,name=iPhone 17
 
 -include .env
 export
 
-DEPLOY_DMG ?= false
-DMG_DEST   ?=
+DEPLOY_DMG     ?= false
+DMG_DEST       ?=
+TEAM_ID        ?=
+DEVELOPER_NAME ?=
 
 bootstrap:
 	bash scripts/bootstrap.sh
@@ -59,16 +62,28 @@ ios:
 		"$(IOS_APP_PATH)" \
 		|| { echo "Error: Installation failed. Device '$(IOS_DEVICE_UDID)' must be unlocked and trusted."; exit 1; }
 
-deploy: build
+DEPLOY_MOUNT := $(shell echo "/tmp/$(SCHEME)-deploy" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+
+deploy:
 	@echo "Stopping $(SCHEME) if running..."
 	@osascript -e 'tell application "$(SCHEME)" to quit' 2>/dev/null || true
 	@sleep 2
+ifeq ($(DEPLOY_DMG),true)
+	@$(MAKE) -s dmg
+	@echo "Installing from DMG..."
+	@hdiutil detach "$(DEPLOY_MOUNT)" 2>/dev/null || true
+	@hdiutil attach "dist/$(SCHEME).dmg" -mountpoint "$(DEPLOY_MOUNT)" -quiet
+	@rm -rf "/Applications/$(SCHEME).app"
+	@cp -R "$(DEPLOY_MOUNT)/$(SCHEME).app" "/Applications/$(SCHEME).app"
+	@hdiutil detach "$(DEPLOY_MOUNT)" -quiet
+else
+	@$(MAKE) -s build
 	@echo "Copying to /Applications..."
 	@rm -rf "/Applications/$(SCHEME).app"
 	@ditto "build/Build/Products/Debug/$(SCHEME).app" "/Applications/$(SCHEME).app"
+endif
 	@echo "Launching $(SCHEME)..."
 	@open "/Applications/$(SCHEME).app"
-	@if [ "$(DEPLOY_DMG)" = "true" ]; then $(MAKE) -s dmg; fi
 
 deploy-release:
 	xcodebuild \
