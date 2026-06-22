@@ -71,7 +71,19 @@ Packages/Core/Sources/Core/
 ├── Domain/           – Model・Protocol・UseCase
 ├── Infrastructure/   – 永続化・ネットワーク・サービス
 └── Shared/           – ユーティリティ・拡張
-App/                  – アプリエントリーポイント
+App/
+├── macOS/            – macOS アプリエントリーポイント（常に存在）
+│   ├── App.swift          – @main struct XXX: App
+│   ├── AppDependency.swift
+│   └── RootView.swift
+├── iOS/              – iOS ターゲット追加時に作成
+│   ├── App.swift          – @main struct XXX: App
+│   └── RootView.swift
+└── Widget/           – Widget Extension 追加時に作成
+    ├── WidgetBundle.swift – @main struct XXX: WidgetBundle
+    ├── WidgetView.swift
+    ├── Entry.swift        – TimelineEntry
+    └── Provider.swift     – TimelineProvider
 ```
 
 ### Build Commands

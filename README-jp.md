@@ -73,7 +73,7 @@
 
 - [ ] 「プロジェクト概要」セクションの `<!-- TODO -->` をすべて埋める
 - [ ] CI バッジの URL を実際のリポジトリ URL に変更する
-- [ ] `App/App.swift` の `ExampleApp` をプロジェクト名に変更する
+- [ ] `App/macOS/App.swift` の `ExampleApp` をプロジェクト名に変更する
 - [ ] Xcode プロジェクトを作成し `Packages/Core` をローカルパッケージとして追加する
 - [ ] `make bootstrap` を実行してツールをインストールする（pre-commit hooks も自動インストールされる）
 - [ ] `make test` が通ることを確認する
@@ -132,7 +132,9 @@ SCHEME=MyApp make build
 
 ```
 Package.swift           # ルート — テスト実行・パッケージ管理用
-App/                    # エントリーポイントと DI コンテナ
+App/
+  macOS/                # macOS エントリーポイントと DI コンテナ
+  (iOS/、Widget/ はターゲット追加時に作成)
 Packages/Core/          # 全フィーチャーを含む Swift Package
   Sources/Core/
     Features/           # フィーチャーごとの UI + ViewModel
@@ -163,7 +165,7 @@ scripts/                # シェルスクリプト
 3. Xcode > File > Add Package Dependencies を開く
 4. 「Add Local...」で `Packages/Core` を選択
 5. App ターゲットに `Core` ライブラリを追加
-6. `App/` フォルダ内のファイルをプロジェクトに追加
+6. `App/macOS/` 内のファイルをプロジェクトに追加（iOS・Widget がある場合は各フォルダも追加）
 7. `make test` が通ることを確認
 
 ### 新しいフィーチャーの追加
