@@ -1,7 +1,16 @@
 # AI Context
 
 このファイルを最初に読み、すべての実装判断の基準にしてください。
-**通常セッションでは `docs/dev-charter/` を直接読まず、このファイルのみを参照してください。**
+憲章参照: `docs/dev-charter/CHARTER_INDEX.md` でトピックを特定してから該当ファイルのみ読む
+
+## コンテキスト優先順位
+
+指示が競合する場合は以下の順で優先してください：
+
+1. **タスクコンテキスト** — Issue / Pull Request の指示（最優先）
+2. **プロジェクトコンテキスト** — このファイル（`AI_CONTEXT.md`）
+3. **憲章** — `docs/dev-charter/`
+4. **グローバルコンテキスト** — AI のデフォルト知識
 
 ## 参照順（Reading Order）
 
@@ -18,16 +27,78 @@ AIはタスク開始時に以下の順で参照してください：
 - **[docs/specification.md](docs/specification.md)** — 機能仕様・データフロー
 - **[docs/ui-design.md](docs/ui-design.md)** — UI 設計・コンポーネント仕様
 
-## コンテキスト優先順位
+---
 
-指示が競合する場合は以下の順で優先してください：
+## Project Overview
 
-1. **タスクコンテキスト** — Issue / Pull Request の指示（最優先）
-2. **プロジェクトコンテキスト** — このファイル（`AI_CONTEXT.md`）・`README.md` のプロジェクト概要セクション
-3. **開発憲章** — `docs/dev-charter/`（通常は本ファイルに統合済み）
-4. **グローバルコンテキスト** — AI のデフォルト知識
+<!-- TODO: プロジェクト開始時にこのセクションを記入する -->
+
+**[AppName]** — [アプリの一行説明]
 
 対象: クローズドな Mac app + iOS app（チーム規模: 個人〜3人、将来的に外部委託の可能性あり）
+
+| 項目 | 値 |
+|---|---|
+| プラットフォーム | macOS XX.0+ / iOS XX.0+ |
+| 言語 | Swift 5.9+ |
+| UI | SwiftUI |
+| ストレージ | [UserDefaults / SwiftData / CloudKit] |
+| 外部ライブラリ | なし |
+
+### Xcode Project Settings
+
+```
+Product Name:       [AppName]
+Bundle Identifiers: [bundle.id]（macOS）/ [bundle.id.ios]（iOS）
+Interface:          SwiftUI
+Language:           Swift
+Deployment Target:  macOS XX.0 / iOS XX.0
+```
+
+### Target Structure
+
+```
+[AppName]（macOS App）    – Bundle ID: [bundle.id]
+[AppName] iOS（iOS App）  – Bundle ID: [bundle.id.ios]
+[AppName]Tests / [AppName]UITests
+```
+
+### Main Directories
+
+```
+Packages/Core/Sources/Core/
+├── Features/         – 機能別 UI・ViewModel
+├── Domain/           – Model・Protocol・UseCase
+├── Infrastructure/   – 永続化・ネットワーク・サービス
+└── Shared/           – ユーティリティ・拡張
+App/                  – アプリエントリーポイント
+```
+
+### Build Commands
+
+```bash
+# Swift Package
+swift build
+swift test
+
+# Xcode Project を使う場合
+xcodebuild -project "[AppName].xcodeproj" -scheme "[AppName]" build
+```
+
+Makefile コマンド: `make bootstrap` / `make lint` / `make format` / `make build` / `make test` / `make clean`
+
+### Localization
+
+実装時に決定。優先順位：ユーザー設定 → システム言語 → 英語
+
+### Monetization
+
+**Sublime Text 方式**（全機能無料・一定期間使用後に購入ダイアログを表示・購入で解除）。詳細は `MONETIZATION.md` を参照。
+
+### Scope Exclusions
+
+<!-- TODO: スコープ外の機能を列挙 -->
+- （プロジェクト開始時に記入）
 
 ---
 
@@ -216,12 +287,29 @@ func test_onAppear_loadsItems() async {
 
 ---
 
+## Applied Charter Principles
+
+このプロジェクトに直接影響する憲章原則（`docs/dev-charter/` 配下）：
+
+| 原則 | 参照先 |
+|---|---|
+| 設計哲学（YAGNI・DRY・依存最小化・ローカルファースト・オフライン） | `PRINCIPLES.md` |
+| コードコメント・スタイルガイド | `CODE_STYLE.md` |
+| シークレット管理・pre-commit・gitleaks | `SECURITY_POLICY.md` |
+| UI デザイン・SF Symbols・ダークモード | `UI_GUIDELINES.md` |
+| 収益化・App Store・In-App Purchase | `MONETIZATION_POLICY.md` |
+| ライセンス（All Rights Reserved） | `LEGAL_POLICY.md` |
+| git ワークフロー・Conventional Commits | `PROJECT_LIFECYCLE.md` |
+| ローカライズ方針 | `LOCALIZATION_POLICY.md` |
+
+---
+
 ## Monetization Policy
 
 - クローズドな Mac app / iOS app は **Sublime Text 方式** を採用する
   - 時々購入を促すポップアップを表示し、正式購入で解除
 - 独自の課金システムは禁止（メンテナンスコスト・セキュリティリスク）
-- 本格的にマネタイズを検討する場合は `MONETIZATION.md` を作成し、その概要を `AI_CONTEXT.md` に記載する
+- 詳細は `MONETIZATION.md` を参照する
 
 ---
 
