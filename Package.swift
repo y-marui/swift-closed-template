@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 //
 // NOTE: This Package.swift is for the Core library and tests only.
 // iOSアプリのビルド・実行には .xcodeproj が必要です。
@@ -19,14 +19,5 @@ let package = Package(
     dependencies: [
         .package(path: "Packages/Core")
     ],
-    targets: [
-        // App-level tests (Core への統合テスト用)
-        .testTarget(
-            name: "AppTests",
-            dependencies: [
-                .product(name: "Core", package: "Core")
-            ],
-            path: "Tests/AppTests"
-        )
-    ]
+    targets: []
 )

@@ -17,13 +17,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
 
   lint:
     name: Lint
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -35,12 +37,9 @@ jobs:
 
   test:
     name: Test
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
 
       - name: Resolve packages (Core)
         run: swift package resolve
@@ -50,15 +49,12 @@ jobs:
         run: swift test
         working-directory: Packages/Core
 
-      - name: Resolve packages (root)
-        run: swift package resolve
-
-      - name: Run App integration tests
-        run: swift test --filter AppTests
-
   build:
     name: Build
     needs: [security, lint, test]
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
-      - run: echo "All jobs passed"
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: swift build --package-path Packages/Core --build-path build

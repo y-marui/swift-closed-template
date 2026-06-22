@@ -109,7 +109,7 @@ dmg:
 
 clean:
 	swift package clean
-	rm -rf .build build build-release build-dmg dist
+	rm -rf .build build build-release build-dmg dist DerivedData
 
 update-charter:
 	git subtree pull --prefix=docs/dev-charter dev-charter main --squash
