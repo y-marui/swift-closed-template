@@ -19,8 +19,8 @@
 
 | ファイル | 役割 |
 |---|---|
-| `App/App.swift` | アプリエントリーポイント・ルートビュー |
-| `App/AppDependency.swift` | DI コンテナ |
+| `App/macOS/App.swift` | macOS アプリエントリーポイント・ルートビュー |
+| `App/macOS/AppDependency.swift` | DI コンテナ |
 
 ---
 

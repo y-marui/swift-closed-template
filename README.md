@@ -73,7 +73,7 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 
 - [ ] Fill in all `<!-- TODO -->` placeholders in the Project Overview section
 - [ ] Update the CI badge URLs to your actual repository URL
-- [ ] Rename `ExampleApp` in `App/App.swift` to your project name
+- [ ] Rename `ExampleApp` in `App/macOS/App.swift` to your project name
 - [ ] Create an Xcode project and add `Packages/Core` as a local package
 - [ ] Run `make bootstrap` to install tools (pre-commit hooks are installed automatically)
 - [ ] Confirm `make test` passes
@@ -132,7 +132,9 @@ SCHEME=MyApp make build
 
 ```
 Package.swift           # Root — テスト実行・パッケージ管理用
-App/                    # Entry point and DI container
+App/
+  macOS/                # macOS entry point and DI container
+  (iOS/ and Widget/ added per target)
 Packages/Core/          # Swift Package with all features
   Sources/Core/
     Features/           # UI + ViewModel per feature
@@ -163,7 +165,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for development workflow, naming conven
 3. Xcode > File > Add Package Dependencies
 4. Select `Packages/Core` via "Add Local..."
 5. Add the `Core` library to the App target
-6. Add files in the `App/` folder to the project
+6. Add files in `App/macOS/` (and `App/iOS/`, `App/Widget/` if applicable) to the project
 7. Confirm `make test` passes
 
 ### Adding a New Feature
