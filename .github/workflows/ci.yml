@@ -25,7 +25,7 @@ jobs:
 
   lint:
     name: Lint
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
 
@@ -37,7 +37,7 @@ jobs:
 
   test:
     name: Test
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
 
@@ -52,9 +52,23 @@ jobs:
   build:
     name: Build
     needs: [security, lint, test]
-    runs-on: macos-latest
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
 
       - name: Build
-        run: swift build --package-path Packages/Core --build-path build
+        # xcodeproj を追加した場合は以下に置き換える:
+        # env:
+        #   SCHEME: AppName
+        # run: |
+        #   xcodebuild \
+        #     -project "$SCHEME.xcodeproj" \
+        #     -scheme "$SCHEME" \
+        #     -destination "platform=macOS" \
+        #     -derivedDataPath build \
+        #     CODE_SIGN_IDENTITY="" \
+        #     CODE_SIGNING_REQUIRED=NO \
+        #     CODE_SIGNING_ALLOWED=NO \
+        #     SWIFT_STRICT_CONCURRENCY=complete \
+        #     build
+        run: swift build --package-path Packages/Core --build-path build -Xswiftc -strict-concurrency=complete
