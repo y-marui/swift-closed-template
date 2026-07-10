@@ -1,8 +1,8 @@
 SHELL := /bin/bash
-.PHONY: bootstrap lint format test build ios deploy deploy-release dmg clean update-charter
+.PHONY: bootstrap lint format test build ios ios-release register-widget deploy deploy-release dmg clean update-charter unlock-keychain
 
 # .xcodeprojを自動検出。複数ある場合は XCODE_PROJECT=MyApp.xcodeproj make build で指定。
-XCODE_PROJECT := $(wildcard *.xcodeproj)
+XCODE_PROJECT ?= $(wildcard *.xcodeproj)
 SCHEME        ?= $(basename $(XCODE_PROJECT))
 DESTINATION   ?= platform=macOS,arch=arm64
 SIM_DEST      ?= platform=iOS Simulator,name=iPhone 17
@@ -14,6 +14,8 @@ DEPLOY_DMG     ?= false
 DMG_DEST       ?=
 TEAM_ID        ?=
 DEVELOPER_NAME ?=
+WIDGET_ID      ?=
+WIDGET_APPEX   ?=
 
 bootstrap:
 	bash scripts/bootstrap.sh
@@ -41,9 +43,10 @@ else
 		build
 endif
 
-IOS_SCHEME      ?= $(SCHEME) iOS
-IOS_DEVICE_UDID ?=
-IOS_APP_PATH     = build/Build/Products/Debug-iphoneos/$(IOS_SCHEME).app
+IOS_SCHEME           ?= $(SCHEME) iOS
+IOS_DEVICE_UDID      ?=
+IOS_APP_PATH          = build/Build/Products/Debug-iphoneos/$(IOS_SCHEME).app
+IOS_RELEASE_APP_PATH  = build-release/Build/Products/Release-iphoneos/$(IOS_SCHEME).app
 
 ios:
 	@if [ -z "$(IOS_DEVICE_UDID)" ]; then \
@@ -62,7 +65,31 @@ ios:
 		"$(IOS_APP_PATH)" \
 		|| { echo "Error: Installation failed. Device '$(IOS_DEVICE_UDID)' must be unlocked and trusted."; exit 1; }
 
-DEPLOY_MOUNT := $(shell echo "/tmp/$(SCHEME)-deploy" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+ios-release:
+	@if [ -z "$(IOS_DEVICE_UDID)" ]; then \
+		echo "Error: IOS_DEVICE_UDID is not set. Add IOS_DEVICE_UDID=<udid> to .env"; \
+		echo "       Find your UDID: xcrun xctrace list devices"; \
+		exit 1; \
+	fi
+	xcodebuild \
+		-project "$(XCODE_PROJECT)" \
+		-scheme "$(IOS_SCHEME)" \
+		-configuration Release \
+		-destination "id=$(IOS_DEVICE_UDID)" \
+		-derivedDataPath build-release \
+		-allowProvisioningUpdates \
+		build
+	@if [ ! -d "$(IOS_RELEASE_APP_PATH)" ]; then \
+		echo "Error: Build output not found at '$(IOS_RELEASE_APP_PATH)'"; \
+		exit 1; \
+	fi
+	@echo "Installing Release build on device $(IOS_DEVICE_UDID)..."
+	@xcrun devicectl device install app \
+		--device "$(IOS_DEVICE_UDID)" \
+		"$(IOS_RELEASE_APP_PATH)" \
+		|| { echo "Error: Installation failed. Device '$(IOS_DEVICE_UDID)' must be unlocked and trusted."; exit 1; }
+
+DEPLOY_MOUNT ?= $(shell echo "/tmp/$(SCHEME)-deploy" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
 
 deploy:
 	@echo "Stopping $(SCHEME) if running..."
@@ -107,9 +134,19 @@ deploy-release:
 dmg:
 	@bash scripts/build-dmg.sh "$(DMG_DEST)"
 
+register-widget:
+	@echo "📡 Registering widget..."
+	@pluginkit -a "$(WIDGET_APPEX)" 2>/dev/null || true
+	@pluginkit -e use -i "$(WIDGET_ID)" 2>/dev/null || true
+
 clean:
 	swift package clean
 	rm -rf .build build build-release build-dmg dist DerivedData
+	@SCHEME_ESC=$$(echo "$(SCHEME)" | tr ' ' '_'); \
+	find "$(HOME)/Library/Developer/Xcode/DerivedData" -maxdepth 1 -name "$${SCHEME_ESC}-*" -exec rm -rf {} + 2>/dev/null || true
 
 update-charter:
 	git subtree pull --prefix=docs/dev-charter dev-charter main --squash
+
+unlock-keychain:
+	security unlock-keychain ~/Library/Keychains/login.keychain-db

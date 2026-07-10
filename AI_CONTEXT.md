@@ -161,6 +161,7 @@ Makefile コマンド: `make bootstrap` / `make lint` / `make format` / `make bu
 | ViewModel 内で `APIClient` を直接呼ぶ | UseCase 経由で呼ぶ |
 | View 内にビジネスロジックを書く | UseCase に移動する |
 | `AnyObject` / 型消去を不必要に使う | 具体的な protocol を定義する |
+| `// swiftlint:disable` / `nonisolated(unsafe)` 等の抑制コメント（プロジェクトコード内） | 違反を根本修正する（ファイル分割・メソッド分割・struct 導入等） |
 
 ---
 
