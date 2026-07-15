@@ -101,7 +101,7 @@ ifeq ($(DEPLOY_DMG),true)
 	@hdiutil detach "$(DEPLOY_MOUNT)" 2>/dev/null || true
 	@hdiutil attach "dist/$(SCHEME).dmg" -mountpoint "$(DEPLOY_MOUNT)" -quiet
 	@rm -rf "/Applications/$(SCHEME).app"
-	@cp -R "$(DEPLOY_MOUNT)/$(SCHEME).app" "/Applications/$(SCHEME).app"
+	@cp -Rp "$(DEPLOY_MOUNT)/$(SCHEME).app" "/Applications/$(SCHEME).app"
 	@hdiutil detach "$(DEPLOY_MOUNT)" -quiet
 else
 	@$(MAKE) -s build
