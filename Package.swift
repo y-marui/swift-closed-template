@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 //
 // NOTE: This Package.swift is for the Core library and tests only.
 // iOSアプリのビルド・実行には .xcodeproj が必要です。
@@ -12,7 +12,7 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftAIAppTemplate",
-    platforms: [.iOS(.v17), .macOS(.v14)],
+    platforms: [.iOS(.v26), .macOS(.v26)],
     dependencies: [
         .package(path: "Packages/Core")
     ],
