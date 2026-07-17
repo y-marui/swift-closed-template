@@ -1,14 +1,14 @@
 import SwiftUI
 
-struct ExampleView: View {
+public struct ExampleView: View {
 
     @State private var viewModel: ExampleViewModel
 
-    init(viewModel: ExampleViewModel) {
+    public init(viewModel: ExampleViewModel) {
         _viewModel = State(initialValue: viewModel)
     }
 
-    var body: some View {
+    public var body: some View {
         Group {
             switch viewModel.state {
             case .idle:

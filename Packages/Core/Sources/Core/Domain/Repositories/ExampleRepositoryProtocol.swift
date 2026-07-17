@@ -1,6 +1,6 @@
 import Foundation
 
 @MainActor
-protocol ExampleRepositoryProtocol {
+public protocol ExampleRepositoryProtocol {
     func fetchItems() async throws -> [ExampleItem]
 }

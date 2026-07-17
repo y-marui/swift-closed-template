@@ -2,7 +2,7 @@ import Foundation
 
 @MainActor
 @Observable
-final class ExampleViewModel {
+public final class ExampleViewModel {
 
     enum ViewState {
         case idle
@@ -16,7 +16,7 @@ final class ExampleViewModel {
 
     private let useCase: ExampleUseCaseProtocol
 
-    init(useCase: ExampleUseCaseProtocol) {
+    public init(useCase: ExampleUseCaseProtocol) {
         self.useCase = useCase
     }
 
