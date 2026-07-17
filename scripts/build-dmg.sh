@@ -39,24 +39,41 @@ cat > "${EXPORT_OPTIONS}" << EOF
 </plist>
 EOF
 
-echo "Archiving..."
-xcodebuild archive \
-    -project "${XCODE_PROJECT}" \
-    -scheme "${SCHEME}" \
-    -configuration Release \
-    -destination "platform=macOS" \
-    -archivePath "${ARCHIVE_PATH}" \
-    -allowProvisioningUpdates \
-    DEVELOPMENT_TEAM="${TEAM_ID}"
+CONFIGURATION="${CONFIGURATION:-Debug}"
 
-echo "Exporting with Developer ID..."
-xcodebuild -exportArchive \
-    -archivePath "${ARCHIVE_PATH}" \
-    -exportPath "${EXPORT_PATH}" \
-    -exportOptionsPlist "${EXPORT_OPTIONS}" \
-    -allowProvisioningUpdates
+if [[ "${CONFIGURATION}" == "Debug" ]]; then
+    # Debug: Apple Development signed build
+    DEBUG_APP="build/Build/Products/Debug/${APP_NAME}.app"
+    echo "Building (Debug)..."
+    xcodebuild build \
+        -project "${XCODE_PROJECT}" \
+        -scheme "${SCHEME}" \
+        -configuration Debug \
+        -destination "platform=macOS" \
+        -derivedDataPath build \
+        -allowProvisioningUpdates \
+        DEVELOPMENT_TEAM="${TEAM_ID}"
+    APP_PATH="${DEBUG_APP}"
+else
+    echo "Archiving (${CONFIGURATION})..."
+    xcodebuild archive \
+        -project "${XCODE_PROJECT}" \
+        -scheme "${SCHEME}" \
+        -configuration "${CONFIGURATION}" \
+        -destination "platform=macOS" \
+        -archivePath "${ARCHIVE_PATH}" \
+        -allowProvisioningUpdates \
+        DEVELOPMENT_TEAM="${TEAM_ID}"
 
-APP_PATH="${EXPORT_PATH}/${APP_NAME}.app"
+    echo "Exporting with Developer ID..."
+    xcodebuild -exportArchive \
+        -archivePath "${ARCHIVE_PATH}" \
+        -exportPath "${EXPORT_PATH}" \
+        -exportOptionsPlist "${EXPORT_OPTIONS}" \
+        -allowProvisioningUpdates
+
+    APP_PATH="${EXPORT_PATH}/${APP_NAME}.app"
+fi
 if [[ ! -d "${APP_PATH}" ]]; then
     echo "Error: App not found at ${APP_PATH}" >&2
     exit 1
@@ -81,7 +98,11 @@ hdiutil create \
 rm -rf "${STAGING_DIR}"
 
 echo "Signing DMG..."
-codesign --sign "${SIGN_IDENTITY}" "${DMG_PATH}"
+if [[ "${CONFIGURATION}" == "Debug" ]]; then
+    codesign --sign "-" "${DMG_PATH}"
+else
+    codesign --sign "${SIGN_IDENTITY}" "${DMG_PATH}"
+fi
 
 echo "Built: ${DMG_PATH}"
 
