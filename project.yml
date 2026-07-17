@@ -6,6 +6,10 @@ options:
     # iOS: "26.0" # Uncomment when adding an iOS target.
   developmentLanguage: ja
 
+settings:
+  base:
+    DEVELOPMENT_TEAM: ${TEAM_ID}
+
 packages:
   Core:
     path: Packages/Core
@@ -16,13 +20,15 @@ targets:
     platform: macOS
     sources:
       - path: App/macOS
+    info:
+      path: App/macOS/Info.plist
+      properties: {}
     settings:
       base:
         PRODUCT_NAME: "Swift AI App Template"
         PRODUCT_BUNDLE_IDENTIFIER: y.marui.Swift-AI-App-Template
         MARKETING_VERSION: "1.0"
         CURRENT_PROJECT_VERSION: "1"
-        GENERATE_INFOPLIST_FILE: YES
         SWIFT_VERSION: "6.0"
         CODE_SIGN_STYLE: Automatic
         ENABLE_HARDENED_RUNTIME: YES
@@ -40,7 +46,12 @@ targets:
   #       PRODUCT_BUNDLE_IDENTIFIER: y.marui.Swift-AI-App-Template.iOS
   #       MARKETING_VERSION: "1.0"
   #       CURRENT_PROJECT_VERSION: "1"
-  #       GENERATE_INFOPLIST_FILE: YES
+  #   info:
+  #     path: App/iOS/Info.plist
+  #     properties:
+  #       UILaunchScreen: {}
+  #       UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
+  #       UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationPortrait, UIInterfaceOrientationPortraitUpsideDown, UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight]
   #       SWIFT_VERSION: "6.0"
   #       CODE_SIGN_STYLE: Automatic
   #       TARGETED_DEVICE_FAMILY: "1,2"
@@ -62,8 +73,11 @@ targets:
   #       PRODUCT_BUNDLE_IDENTIFIER: y.marui.Swift-AI-App-Template.Widget
   #       MARKETING_VERSION: "1.0"
   #       CURRENT_PROJECT_VERSION: "1"
-  #       INFOPLIST_FILE: App/Widget/Info.plist
-  #       GENERATE_INFOPLIST_FILE: NO
+  #   info:
+  #     path: App/Widget/Info.plist
+  #     properties:
+  #       NSExtension:
+  #         NSExtensionPointIdentifier: com.apple.widgetkit-extension
   #       ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
   #       ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME: WidgetBackground
   #       SWIFT_VERSION: "6.0"

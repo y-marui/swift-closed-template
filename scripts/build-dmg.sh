@@ -16,7 +16,7 @@ DIST_DIR="dist"
 STAGING_DIR="/tmp/$(echo "${APP_NAME}" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')-dmg-staging"
 DMG_DEST="${1:-}"
 
-TEAM_ID="${TEAM_ID:?Error: TEAM_ID is not set. Add TEAM_ID=<your-team-id> to .env}"
+TEAM_ID="${TEAM_ID:?Error: TEAM_ID is not set in Makefile}"
 SIGN_IDENTITY="Developer ID Application: ${DEVELOPER_NAME:-$(security find-identity -v -p codesigning | grep "Developer ID Application" | head -1 | sed 's/.*"\(.*\)".*/\1/')} (${TEAM_ID})"
 ARCHIVE_PATH="${BUILD_DIR}/${APP_NAME}.xcarchive"
 EXPORT_PATH="${BUILD_DIR}/export"
@@ -46,7 +46,8 @@ xcodebuild archive \
     -configuration Release \
     -destination "platform=macOS" \
     -archivePath "${ARCHIVE_PATH}" \
-    -allowProvisioningUpdates
+    -allowProvisioningUpdates \
+    DEVELOPMENT_TEAM="${TEAM_ID}"
 
 echo "Exporting with Developer ID..."
 xcodebuild -exportArchive \
