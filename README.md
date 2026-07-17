@@ -79,6 +79,7 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 - [ ] Confirm `make test` passes
 - [ ] Confirm CI works in GitHub Actions (security / lint / test jobs)
 - [ ] Delete `ExampleFeature` once your first production feature is working (see [`CONTRIBUTING.md`](CONTRIBUTING.md))
+- [ ] If you use signed DMG distribution (`make deploy` / `make deploy-release` with `DEPLOY_DMG=true` in `.env`), replace `TEAM_ID` / `DEVELOPER_NAME` in the `Makefile` with your own values (leaving them blank makes `scripts/build-dmg.sh` fail)
 
 ## Features
 
