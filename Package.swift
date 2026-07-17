@@ -1,12 +1,9 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 //
 // NOTE: This Package.swift is for the Core library and tests only.
 // iOSアプリのビルド・実行には .xcodeproj が必要です。
 //
-// Xcodeでプロジェクトを作成する手順:
-//   1. Xcode > File > New > Project でiOS Appを作成
-//   2. プロジェクト名を設定し、このディレクトリに保存
-//   3. Xcode > File > Add Package Dependencies で Packages/Core を追加
+// Xcodeプロジェクトは `xcodegen generate` で project.yml から生成します。
 //
 // ライブラリ・テストのみ手元で動かす場合:
 //   cd Packages/Core && swift test
@@ -15,7 +12,7 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftAIAppTemplate",
-    platforms: [.iOS(.v17), .macOS(.v14)],
+    platforms: [.iOS(.v26), .macOS(.v26)],
     dependencies: [
         .package(path: "Packages/Core")
     ],

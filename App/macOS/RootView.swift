@@ -1,3 +1,4 @@
+import Core
 import SwiftUI
 
 // @MainActorメソッドをinit内で呼ぶとコンパイルエラーになるため、

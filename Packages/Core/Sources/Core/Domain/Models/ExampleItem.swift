@@ -1,6 +1,6 @@
 import Foundation
 
-struct ExampleItem: Identifiable, Decodable {
-    let id: UUID
-    let title: String
+public struct ExampleItem: Identifiable, Decodable {
+    public let id: UUID
+    public let title: String
 }
