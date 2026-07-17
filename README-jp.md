@@ -79,6 +79,7 @@
 - [ ] `make test` が通ることを確認する
 - [ ] CI が GitHub Actions で動作することを確認する（security / lint / test の 3 ジョブ）
 - [ ] 最初の本番フィーチャーが動作したら `ExampleFeature` を削除する（手順: [`CONTRIBUTING.md`](CONTRIBUTING.md)）
+- [ ] 署名付き DMG 配布（`make deploy` / `make deploy-release`、`.env` の `DEPLOY_DMG=true`）を使う場合は `Makefile` の `TEAM_ID` / `DEVELOPER_NAME` をプロジェクト固有の値に置き換える（空のままだと `scripts/build-dmg.sh` がエラーになる）
 
 ## 特徴
 
