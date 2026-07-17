@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.PHONY: bootstrap lint format test ensure-xcode-project build ios ios-release register-widget deploy deploy-release dmg clean update-charter unlock-keychain
+.PHONY: bootstrap lint format test ensure-xcode-project xcodegen build ios ios-release register-widget deploy deploy-release dmg clean update-charter unlock-keychain
 
 -include .env
 
@@ -15,6 +15,7 @@ DMG_DEST ?=
 IOS_SCHEME ?= Swift AI App Template iOS
 IOS_PRODUCT_NAME ?= Swift AI App Template
 IOS_DEVICE_UDID ?=
+SKIP_XCODEGEN ?= false
 IOS_APP_PATH = build/Build/Products/Debug-iphoneos/$(IOS_PRODUCT_NAME).app
 IOS_RELEASE_APP_PATH = build-release/Build/Products/Release-iphoneos/$(IOS_PRODUCT_NAME).app
 WIDGET_ID ?=
@@ -34,6 +35,12 @@ test: ensure-xcode-project
 	bash scripts/test.sh
 
 ensure-xcode-project:
+	@if [ "$(SKIP_XCODEGEN)" != "true" ]; then \
+		command -v xcodegen >/dev/null 2>&1 || { echo "Error: xcodegen is not installed. Run 'make bootstrap'."; exit 1; }; \
+		TEAM_ID="$(TEAM_ID)" xcodegen generate; \
+	fi
+
+xcodegen:
 	@command -v xcodegen >/dev/null 2>&1 || { echo "Error: xcodegen is not installed. Run 'make bootstrap'."; exit 1; }
 	TEAM_ID="$(TEAM_ID)" xcodegen generate
 
