@@ -57,7 +57,7 @@ DEPLOY_MOUNT ?= $(shell echo "/tmp/$(APP_NAME)-deploy" | tr ' ' '-' | tr '[:uppe
 deploy: ensure-xcode-project
 	@if pgrep -x "$(APP_NAME)" >/dev/null; then osascript -e 'tell application "$(APP_NAME)" to quit'; fi
 ifeq ($(DEPLOY_DMG),true)
-	$(MAKE) -s dmg
+	CONFIGURATION=Debug $(MAKE) -s dmg
 	@if mount | grep -Fq "on $(DEPLOY_MOUNT) "; then hdiutil detach "$(DEPLOY_MOUNT)"; fi
 	hdiutil attach "dist/$(APP_NAME).dmg" -mountpoint "$(DEPLOY_MOUNT)" -quiet
 	rm -rf "/Applications/$(APP_NAME).app"
