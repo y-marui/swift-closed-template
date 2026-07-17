@@ -24,6 +24,7 @@ brew install xcodegen || brew upgrade xcodegen
 
 # Install pre-commit hooks
 echo "🔒 Installing pre-commit hooks..."
+git config --local core.hooksPath .git/hooks
 pre-commit install
 
 # Generate the Xcode project from the version-controlled specification
@@ -31,10 +32,7 @@ echo "🛠️ Generating Xcode project..."
 xcodegen generate
 
 # Resolve Swift packages
-echo "📦 Resolving packages (root)..."
-swift package resolve
-
-echo "📦 Resolving packages (Packages/Core)..."
+echo "📦 Resolving packages (Core)..."
 swift package resolve --package-path Packages/Core
 
 echo "✅ Bootstrap complete!"
