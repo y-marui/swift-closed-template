@@ -5,10 +5,13 @@
 xcuserdata/
 DerivedData/
 *.hmap
+.derived-data-log-*
 
 # Swift Package Manager
 .build/
 build/
+build-*/
+dist/
 Packages/Core/.build/
 *.resolved
 
