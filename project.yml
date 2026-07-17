@@ -3,6 +3,7 @@ name: Swift AI App Template
 options:
   deploymentTarget:
     macOS: "26.0"
+    # iOS: "26.0" # Uncomment when adding an iOS target.
   developmentLanguage: ja
 
 packages:
@@ -26,3 +27,40 @@ targets:
         ENABLE_HARDENED_RUNTIME: YES
     dependencies:
       - package: Core
+
+  # Swift AI App Template iOS:
+  #   type: application
+  #   platform: iOS
+  #   sources:
+  #     - path: App/iOS
+  #   settings:
+  #     base:
+  #       PRODUCT_NAME: "Swift AI App Template"
+  #       PRODUCT_BUNDLE_IDENTIFIER: y.marui.Swift-AI-App-Template.iOS
+  #       MARKETING_VERSION: "1.0"
+  #       CURRENT_PROJECT_VERSION: "1"
+  #       GENERATE_INFOPLIST_FILE: YES
+  #       SWIFT_VERSION: "6.0"
+  #       TARGETED_DEVICE_FAMILY: "1,2"
+  #   dependencies:
+  #     - package: Core
+  #     - target: Swift AI App Template WidgetExtension
+  #       embed: true
+  #       codeSign: true
+
+  # Swift AI App Template WidgetExtension:
+  #   type: app-extension
+  #   platform: auto
+  #   supportedDestinations: [iOS, macOS]
+  #   sources:
+  #     - path: App/Widget
+  #   settings:
+  #     base:
+  #       PRODUCT_NAME: "Swift AI App Template WidgetExtension"
+  #       PRODUCT_BUNDLE_IDENTIFIER: y.marui.Swift-AI-App-Template.Widget
+  #       MARKETING_VERSION: "1.0"
+  #       CURRENT_PROJECT_VERSION: "1"
+  #       INFOPLIST_FILE: App/Widget/Info.plist
+  #       SWIFT_VERSION: "6.0"
+  #   dependencies:
+  #     - package: Core

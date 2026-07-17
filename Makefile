@@ -1,21 +1,23 @@
 SHELL := /bin/bash
-.PHONY: bootstrap lint format test build ios ios-release register-widget deploy deploy-release dmg clean update-charter unlock-keychain
+.PHONY: bootstrap lint format test ensure-xcode-project build ios ios-release register-widget deploy deploy-release dmg clean update-charter unlock-keychain
 
-# .xcodeprojを自動検出。複数ある場合は XCODE_PROJECT=MyApp.xcodeproj make build で指定。
-XCODE_PROJECT ?= $(wildcard *.xcodeproj)
-SCHEME        ?= $(basename $(XCODE_PROJECT))
-DESTINATION   ?= platform=macOS,arch=arm64
-SIM_DEST      ?= platform=iOS Simulator,name=iPhone 17
-
--include .env
-export
-
-DEPLOY_DMG     ?= false
-DMG_DEST       ?=
-TEAM_ID        ?=
-DEVELOPER_NAME ?=
-WIDGET_ID      ?=
-WIDGET_APPEX   ?=
+APP_NAME := Swift AI App Template
+XCODE_PROJECT := $(APP_NAME).xcodeproj
+SCHEME ?= $(APP_NAME)
+DESTINATION ?= platform=macOS,arch=arm64
+SIM_DEST ?= platform=iOS Simulator,name=iPhone 17
+TEAM_ID ?=
+DEVELOPER_NAME ?= Yukihiro Marui
+DEPLOY_DMG ?= false
+DMG_DEST ?=
+IOS_SCHEME ?= Swift AI App Template iOS
+IOS_PRODUCT_NAME ?= Swift AI App Template
+IOS_DEVICE_UDID ?=
+IOS_APP_PATH = build/Build/Products/Debug-iphoneos/$(IOS_PRODUCT_NAME).app
+IOS_RELEASE_APP_PATH = build-release/Build/Products/Release-iphoneos/$(IOS_PRODUCT_NAME).app
+WIDGET_ID ?=
+WIDGET_TARGET ?=
+WIDGET_APPEX ?=
 
 bootstrap:
 	bash scripts/bootstrap.sh
@@ -26,124 +28,68 @@ lint:
 format:
 	swiftformat .
 
-test:
+test: ensure-xcode-project
 	bash scripts/test.sh
 
-build:
-ifeq ($(XCODE_PROJECT),)
-	swift build --package-path Packages/Core --build-path build
-else
-	xcodebuild \
-		-project "$(XCODE_PROJECT)" \
-		-scheme "$(SCHEME)" \
-		-configuration Debug \
-		-destination "$(DESTINATION)" \
-		-derivedDataPath build \
-		-allowProvisioningUpdates \
-		build
-endif
+ensure-xcode-project:
+	@command -v xcodegen >/dev/null 2>&1 || { echo "Error: xcodegen is not installed. Run 'make bootstrap'."; exit 1; }
+	xcodegen generate
 
-IOS_SCHEME           ?= $(SCHEME) iOS
-IOS_DEVICE_UDID      ?=
-IOS_APP_PATH          = build/Build/Products/Debug-iphoneos/$(IOS_SCHEME).app
-IOS_RELEASE_APP_PATH  = build-release/Build/Products/Release-iphoneos/$(IOS_SCHEME).app
+build: ensure-xcode-project
+	xcodebuild -project "$(XCODE_PROJECT)" -scheme "$(SCHEME)" -configuration Debug -destination "$(DESTINATION)" -derivedDataPath build -allowProvisioningUpdates DEVELOPMENT_TEAM="$(TEAM_ID)" build
 
-ios:
-	@if [ -z "$(IOS_DEVICE_UDID)" ]; then \
-		echo "Error: IOS_DEVICE_UDID is not set. Add IOS_DEVICE_UDID=<udid> to .env"; \
-		echo "       Find your UDID: xcrun xctrace list devices"; \
-		exit 1; \
-	fi
+ios: ensure-xcode-project
+	@if [ -z "$(IOS_DEVICE_UDID)" ]; then echo "Error: IOS_DEVICE_UDID is not set. Pass IOS_DEVICE_UDID=<udid> to make."; exit 1; fi
 	$(MAKE) SCHEME="$(IOS_SCHEME)" DESTINATION="id=$(IOS_DEVICE_UDID)" build
-	@if [ ! -d "$(IOS_APP_PATH)" ]; then \
-		echo "Error: Build output not found at '$(IOS_APP_PATH)'"; \
-		exit 1; \
-	fi
-	@echo "Installing on device $(IOS_DEVICE_UDID)..."
-	@xcrun devicectl device install app \
-		--device "$(IOS_DEVICE_UDID)" \
-		"$(IOS_APP_PATH)" \
-		|| { echo "Error: Installation failed. Device '$(IOS_DEVICE_UDID)' must be unlocked and trusted."; exit 1; }
+	@test -d "$(IOS_APP_PATH)" || { echo "Error: Build output not found at '$(IOS_APP_PATH)'"; exit 1; }
+	xcrun devicectl device install app --device "$(IOS_DEVICE_UDID)" "$(IOS_APP_PATH)"
 
-ios-release:
-	@if [ -z "$(IOS_DEVICE_UDID)" ]; then \
-		echo "Error: IOS_DEVICE_UDID is not set. Add IOS_DEVICE_UDID=<udid> to .env"; \
-		echo "       Find your UDID: xcrun xctrace list devices"; \
-		exit 1; \
-	fi
-	xcodebuild \
-		-project "$(XCODE_PROJECT)" \
-		-scheme "$(IOS_SCHEME)" \
-		-configuration Release \
-		-destination "id=$(IOS_DEVICE_UDID)" \
-		-derivedDataPath build-release \
-		-allowProvisioningUpdates \
-		build
-	@if [ ! -d "$(IOS_RELEASE_APP_PATH)" ]; then \
-		echo "Error: Build output not found at '$(IOS_RELEASE_APP_PATH)'"; \
-		exit 1; \
-	fi
-	@echo "Installing Release build on device $(IOS_DEVICE_UDID)..."
-	@xcrun devicectl device install app \
-		--device "$(IOS_DEVICE_UDID)" \
-		"$(IOS_RELEASE_APP_PATH)" \
-		|| { echo "Error: Installation failed. Device '$(IOS_DEVICE_UDID)' must be unlocked and trusted."; exit 1; }
+ios-release: ensure-xcode-project
+	@if [ -z "$(IOS_DEVICE_UDID)" ]; then echo "Error: IOS_DEVICE_UDID is not set. Pass IOS_DEVICE_UDID=<udid> to make."; exit 1; fi
+	xcodebuild -project "$(XCODE_PROJECT)" -scheme "$(IOS_SCHEME)" -configuration Release -destination "id=$(IOS_DEVICE_UDID)" -derivedDataPath build-release -allowProvisioningUpdates DEVELOPMENT_TEAM="$(TEAM_ID)" build
+	@test -d "$(IOS_RELEASE_APP_PATH)" || { echo "Error: Build output not found at '$(IOS_RELEASE_APP_PATH)'"; exit 1; }
+	xcrun devicectl device install app --device "$(IOS_DEVICE_UDID)" "$(IOS_RELEASE_APP_PATH)"
 
-DEPLOY_MOUNT ?= $(shell echo "/tmp/$(SCHEME)-deploy" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
+DEPLOY_MOUNT ?= $(shell echo "/tmp/$(APP_NAME)-deploy" | tr ' ' '-' | tr '[:upper:]' '[:lower:]')
 
-deploy:
-	@echo "Stopping $(SCHEME) if running..."
-	@osascript -e 'tell application "$(SCHEME)" to quit' 2>/dev/null || true
-	@sleep 2
+deploy: ensure-xcode-project
+	@if pgrep -x "$(APP_NAME)" >/dev/null; then osascript -e 'tell application "$(APP_NAME)" to quit'; fi
 ifeq ($(DEPLOY_DMG),true)
-	@$(MAKE) -s dmg
-	@echo "Installing from DMG..."
-	@hdiutil detach "$(DEPLOY_MOUNT)" 2>/dev/null || true
-	@hdiutil attach "dist/$(SCHEME).dmg" -mountpoint "$(DEPLOY_MOUNT)" -quiet
-	@rm -rf "/Applications/$(SCHEME).app"
-	@cp -Rp "$(DEPLOY_MOUNT)/$(SCHEME).app" "/Applications/$(SCHEME).app"
-	@hdiutil detach "$(DEPLOY_MOUNT)" -quiet
+	$(MAKE) -s dmg
+	@if mount | grep -Fq "on $(DEPLOY_MOUNT) "; then hdiutil detach "$(DEPLOY_MOUNT)"; fi
+	hdiutil attach "dist/$(APP_NAME).dmg" -mountpoint "$(DEPLOY_MOUNT)" -quiet
+	rm -rf "/Applications/$(APP_NAME).app"
+	cp -Rp "$(DEPLOY_MOUNT)/$(APP_NAME).app" "/Applications/$(APP_NAME).app"
+	hdiutil detach "$(DEPLOY_MOUNT)" -quiet
 else
-	@$(MAKE) -s build
-	@echo "Copying to /Applications..."
-	@rm -rf "/Applications/$(SCHEME).app"
-	@ditto "build/Build/Products/Debug/$(SCHEME).app" "/Applications/$(SCHEME).app"
+	$(MAKE) -s build
+	rm -rf "/Applications/$(APP_NAME).app"
+	ditto "build/Build/Products/Debug/$(APP_NAME).app" "/Applications/$(APP_NAME).app"
 endif
-	@echo "Launching $(SCHEME)..."
-	@open "/Applications/$(SCHEME).app"
+	@if [ -n "$(WIDGET_TARGET)" ]; then $(MAKE) -s register-widget; fi
+	open "/Applications/$(APP_NAME).app"
 
-deploy-release:
-	xcodebuild \
-		-project "$(XCODE_PROJECT)" \
-		-scheme "$(SCHEME)" \
-		-configuration Release \
-		-destination "$(DESTINATION)" \
-		-derivedDataPath build-release \
-		-allowProvisioningUpdates \
-		build
-	@echo "Stopping $(SCHEME) if running..."
-	@osascript -e 'tell application "$(SCHEME)" to quit' 2>/dev/null || true
-	@sleep 2
-	@echo "Copying to /Applications..."
-	@rm -rf "/Applications/$(SCHEME).app"
-	@ditto "build-release/Build/Products/Release/$(SCHEME).app" "/Applications/$(SCHEME).app"
-	@echo "Launching $(SCHEME)..."
-	@open "/Applications/$(SCHEME).app"
-	@if [ "$(DEPLOY_DMG)" = "true" ]; then $(MAKE) -s dmg; fi
+deploy-release: ensure-xcode-project
+	xcodebuild -project "$(XCODE_PROJECT)" -scheme "$(SCHEME)" -configuration Release -destination "$(DESTINATION)" -derivedDataPath build-release -allowProvisioningUpdates DEVELOPMENT_TEAM="$(TEAM_ID)" build
+	@if pgrep -x "$(APP_NAME)" >/dev/null; then osascript -e 'tell application "$(APP_NAME)" to quit'; fi
+	rm -rf "/Applications/$(APP_NAME).app"
+	ditto "build-release/Build/Products/Release/$(APP_NAME).app" "/Applications/$(APP_NAME).app"
+	@if [ -n "$(WIDGET_TARGET)" ]; then $(MAKE) -s register-widget; fi
+	open "/Applications/$(APP_NAME).app"
+	@if [ "$(DEPLOY_DMG)" = "true" ]; then CONFIGURATION=Release $(MAKE) -s dmg; fi
 
-dmg:
-	@bash scripts/build-dmg.sh "$(DMG_DEST)"
+dmg: ensure-xcode-project
+	bash scripts/build-dmg.sh "$(DMG_DEST)"
 
 register-widget:
-	@echo "📡 Registering widget..."
-	@pluginkit -a "$(WIDGET_APPEX)" 2>/dev/null || true
-	@pluginkit -e use -i "$(WIDGET_ID)" 2>/dev/null || true
+	@test -n "$(WIDGET_ID)" -a -n "$(WIDGET_APPEX)" || { echo "Error: widget is not configured."; exit 1; }
+	pluginkit -a "$(WIDGET_APPEX)"
+	pluginkit -e use -i "$(WIDGET_ID)"
 
 clean:
 	swift package clean
 	rm -rf .build build build-release build-dmg dist DerivedData
-	@SCHEME_ESC=$$(echo "$(SCHEME)" | tr ' ' '_'); \
-	find "$(HOME)/Library/Developer/Xcode/DerivedData" -maxdepth 1 -name "$${SCHEME_ESC}-*" -exec rm -rf {} + 2>/dev/null || true
+	@if [ -d "$(HOME)/Library/Developer/Xcode/DerivedData" ]; then SCHEME_ESC=$$(echo "$(SCHEME)" | tr ' ' '_'); find "$(HOME)/Library/Developer/Xcode/DerivedData" -maxdepth 1 -name "$${SCHEME_ESC}-*" -exec rm -rf {} +; fi
 
 update-charter:
 	git subtree pull --prefix=docs/dev-charter dev-charter main --squash
