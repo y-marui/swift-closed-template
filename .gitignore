@@ -1,5 +1,6 @@
 # Xcode
-*.xcodeproj/xcuserdata/
+# project.ymlから`xcodegen generate`で再生成するため.xcodeproj自体はコミットしない
+*.xcodeproj/
 *.xcworkspace/xcuserdata/
 xcuserdata/
 DerivedData/

@@ -1,0 +1,28 @@
+name: Swift AI App Template
+
+options:
+  deploymentTarget:
+    macOS: "14.0"
+  developmentLanguage: ja
+
+packages:
+  Core:
+    path: Packages/Core
+
+targets:
+  Swift AI App Template:
+    type: application
+    platform: macOS
+    sources:
+      - path: App/macOS
+    settings:
+      base:
+        PRODUCT_NAME: "Swift AI App Template"
+        PRODUCT_BUNDLE_IDENTIFIER: y.marui.Swift-AI-App-Template
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        SWIFT_VERSION: "6.0"
+        ENABLE_HARDENED_RUNTIME: YES
+    dependencies:
+      - package: Core

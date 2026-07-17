@@ -19,9 +19,16 @@ brew install swiftformat || brew upgrade swiftformat
 echo "📦 Installing pre-commit..."
 brew install pre-commit || brew upgrade pre-commit
 
+echo "📦 Installing XcodeGen..."
+brew install xcodegen || brew upgrade xcodegen
+
 # Install pre-commit hooks
 echo "🔒 Installing pre-commit hooks..."
 pre-commit install
+
+# Generate the Xcode project from the version-controlled specification
+echo "🛠️ Generating Xcode project..."
+xcodegen generate
 
 # Resolve Swift packages
 echo "📦 Resolving packages (root)..."
