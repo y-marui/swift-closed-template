@@ -32,6 +32,11 @@ targets:
         SWIFT_VERSION: "6.0"
         CODE_SIGN_STYLE: Automatic
         ENABLE_HARDENED_RUNTIME: YES
+      configs:
+        Debug:
+          CODE_SIGN_ENTITLEMENTS: App/macOS/Swift AI App Template Debug.entitlements
+        Release:
+          CODE_SIGN_ENTITLEMENTS: App/macOS/Swift AI App Template Release.entitlements
     dependencies:
       - package: Core
 
