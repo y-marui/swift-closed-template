@@ -302,6 +302,26 @@ Xcode が自動生成する `[AppName]Tests`・`[AppName]UITests` はユニッ�
 
 自動生成された `[AppName].xcodeproj/xcuserdata/` 等がコミットされないことを確認する。
 
+### 6. macOS + iOS + Widget を組み合わせる場合の Bundle ID
+
+`project.yml` の Widget（`type: app-extension`, `supportedDestinations: [iOS, macOS]`）を
+macOS App と iOS App の**両方**に埋め込む場合、Bundle ID は以下の規則に必ず従うこと：
+
+- macOS App: `y.marui.<AppName>`
+- iOS App: `y.marui.<AppName>.iOS`（macOS と共通化しない）
+- Widget（単一ターゲットのまま SDK 条件で出し分ける）:
+  ```yaml
+  PRODUCT_BUNDLE_IDENTIFIER: y.marui.<AppName>.Widget
+  PRODUCT_BUNDLE_IDENTIFIER[sdk=iphone*]: y.marui.<AppName>.iOS.Widget
+  ```
+
+**理由**: Apple の要件により、埋め込まれる Extension の Bundle ID は親アプリの Bundle ID を
+接頭辞に持たなければならない（`Embedded binary's bundle identifier is not prefixed with the
+parent app's bundle identifier` エラー）。macOS App と iOS App の Bundle ID を共通化（Universal
+Purchase 的な構成）して回避するのではなく、Widget 側を SDK 条件付きで出し分けるのが y-marui
+プロジェクト共通の規約。`project.yml` の Widget ターゲットのコメントアウトを解除する際は、
+`PRODUCT_BUNDLE_IDENTIFIER[sdk=iphone*]` の行を削除しないこと。
+
 ---
 
 ## Example コードの削除手順
