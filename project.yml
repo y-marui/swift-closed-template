@@ -75,7 +75,12 @@ targets:
   #   settings:
   #     base:
   #       PRODUCT_NAME: "Swift AI App Template WidgetExtension"
+  #       # 埋め込み先アプリの Bundle ID プレフィックス制約（Apple: "Embedded binary's bundle
+  #       # identifier is not prefixed with the parent app's bundle identifier"）を満たすため、
+  #       # 単一ターゲットのまま SDK 条件付きビルド設定で macOS/iOS 別の Bundle ID を割り当てる。
+  #       # iOS 側 App の Bundle ID（<AppName>.iOS）を接頭辞に持たせる必要があるため必須。
   #       PRODUCT_BUNDLE_IDENTIFIER: y.marui.Swift-AI-App-Template.Widget
+  #       PRODUCT_BUNDLE_IDENTIFIER[sdk=iphone*]: y.marui.Swift-AI-App-Template.iOS.Widget
   #       MARKETING_VERSION: "1.0"
   #       CURRENT_PROJECT_VERSION: "1"
   #   info:
