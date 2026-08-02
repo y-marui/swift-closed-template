@@ -9,6 +9,7 @@ options:
 settings:
   base:
     DEVELOPMENT_TEAM: ${TEAM_ID}
+    SWIFT_STRICT_CONCURRENCY: complete
 
 packages:
   Core:
