@@ -3,7 +3,7 @@
 `ExampleFeature` を参考に、実際のフィーチャーを追加する手順を示します。
 ここでは「TodoList（タスク一覧）」フィーチャーを例に説明します。
 
-## 完成後のファイル構成
+## Final File Structure
 
 ```
 Packages/Core/Sources/Core/
@@ -24,7 +24,7 @@ Packages/Core/Sources/Core/
 
 ---
 
-## Step 1: Domain モデルを定義する
+## Step 1: Define the Domain Model
 
 `Domain/Models/Todo.swift`
 
@@ -42,7 +42,7 @@ struct Todo: Identifiable {
 
 ---
 
-## Step 2: Repository プロトコルを定義する
+## Step 2: Define the Repository Protocol
 
 `Domain/Repositories/TodoRepositoryProtocol.swift`
 
@@ -61,7 +61,7 @@ protocol TodoRepositoryProtocol {
 
 ---
 
-## Step 3: UseCase を定義する
+## Step 3: Define the UseCase
 
 `Features/TodoList/TodoListUseCase.swift`
 
@@ -103,7 +103,7 @@ struct TodoListUseCase: TodoListUseCaseProtocol {
 
 ---
 
-## Step 4: ViewModel を定義する
+## Step 4: Define the ViewModel
 
 `Features/TodoList/TodoListViewModel.swift`
 
@@ -164,7 +164,7 @@ final class TodoListViewModel {
 
 ---
 
-## Step 5: View を定義する
+## Step 5: Define the View
 
 `Features/TodoList/TodoListView.swift`
 
@@ -216,7 +216,7 @@ struct TodoListView: View {
 
 ---
 
-## Step 6: Repository 実装を追加する
+## Step 6: Add the Repository Implementation
 
 `Infrastructure/Services/TodoRepository.swift`
 
@@ -250,7 +250,7 @@ struct TodoAPIRepository: TodoRepositoryProtocol {
 
 ---
 
-## Step 7: AppDependency に登録する
+## Step 7: Register with AppDependency
 
 `App/AppDependency.swift`
 
@@ -270,7 +270,7 @@ func makeTodoListViewModel() -> TodoListViewModel {
 
 ---
 
-## Step 8: RootView に追加する
+## Step 8: Add to RootView
 
 ```swift
 NavigationStack {
@@ -280,7 +280,7 @@ NavigationStack {
 
 ---
 
-## よくある間違い
+## Common Mistakes
 
 | ❌ やってはいけない | ✅ 正しい |
 |---|---|

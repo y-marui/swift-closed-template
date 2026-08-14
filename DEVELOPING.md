@@ -2,11 +2,11 @@
 
 ビルド・テスト・実装規約・命名規則など、開発者向けの情報をまとめています。
 
-## セットアップ
+## Setup
 
 [README-jp.md](README-jp.md) のセットアップ手順に従ってください。
 
-### Xcode 設定
+### Xcode Configuration
 
 DerivedData をプロジェクト内（`DerivedData/`）に配置することで `make clean` で一括削除できる。
 
@@ -17,7 +17,7 @@ DerivedData をプロジェクト内（`DerivedData/`）に配置することで
 
 ---
 
-## ロードマップ
+## Roadmap
 
 <!-- TODO: プロジェクト開始時に Step を記入する -->
 
@@ -34,7 +34,7 @@ DerivedData をプロジェクト内（`DerivedData/`）に配置することで
 
 ---
 
-## 日常コマンド
+## Daily Commands
 
 ```bash
 make lint     # SwiftLint でコード品質チェック
@@ -46,15 +46,15 @@ make clean    # ビルド成果物削除
 
 ---
 
-## 機能追加ワークフロー
+## Feature Addition Workflow
 
-### 1. ディレクトリを作成
+### 1. Create the Directory
 
 ```bash
 mkdir -p Packages/Core/Sources/Core/Features/NewFeature/
 ```
 
-### 2. ViewModel の追加
+### 2. Add the ViewModel
 
 ```bash
 cp templates/feature/ViewModel.swift.template \
@@ -63,21 +63,21 @@ cp templates/feature/ViewModel.swift.template \
 
 `{{FeatureName}}` を実際の名前に置き換えてください。
 
-### 3. View の追加
+### 3. Add the View
 
 ```bash
 cp templates/feature/View.swift.template \
   Packages/Core/Sources/Core/Features/NewFeature/NewFeatureView.swift
 ```
 
-### 4. UseCase / Repository の追加（必要な場合）
+### 4. Add UseCase / Repository (If Needed)
 
 ```bash
 cp templates/feature/UseCase.swift.template \
   Packages/Core/Sources/Core/Domain/UseCases/NewFeatureUseCase.swift
 ```
 
-### 5. AppDependency.swift に登録
+### 5. Register in AppDependency.swift
 
 ```swift
 let newFeatureUseCase = NewFeatureUseCaseImpl(repository: newFeatureRepository)
@@ -88,7 +88,7 @@ let newFeatureViewModel = NewFeatureViewModel(useCase: newFeatureUseCase)
 
 ---
 
-## テスト
+## Testing
 
 テストは `Packages/Core/Tests/CoreTests/` に配置します。Given / When / Then 構造で記述してください：
 
@@ -108,11 +108,11 @@ func test_onAppear_loadsItems() async {
 
 ---
 
-## コーディング規約
+## Coding Conventions
 
 詳細は [AI_CONTEXT.md](AI_CONTEXT.md) を参照してください。
 
-### 要点
+### Key Points
 
 - `@Observable` + `@MainActor` を使う（`ObservableObject` 禁止）
 - `async/await` を使う（`Combine` 禁止）
@@ -122,9 +122,9 @@ func test_onAppear_loadsItems() async {
 
 ---
 
-## 開発フロー
+## Development Flow
 
-### ブランチ戦略
+### Branch Strategy
 
 ```
 feature/xxx → step0N-xxx → main → タグ付け
@@ -149,7 +149,7 @@ refactor: リファクタリング
 docs: ドキュメント更新
 ```
 
-### リリース手順
+### Release Steps
 
 1. `main` ブランチに PR をマージ
 2. CI（lint / build）がグリーンであることを確認
@@ -161,7 +161,7 @@ git tag -a v1.0.0 -m "Release v1.0.0"
 git push origin v1.0.0
 ```
 
-### ホットフィックス手順
+### Hotfix Steps
 
 ```bash
 git checkout -b hotfix/issue-description main
@@ -176,7 +176,7 @@ git push origin main v1.0.1
 
 ---
 
-## 命名規則
+## Naming Conventions
 
 | 種別 | 規則 | 例 |
 |---|---|---|
@@ -187,17 +187,17 @@ git push origin main v1.0.1
 
 ---
 
-## 依存パッケージの管理
+## Dependency Package Management
 
 このプロジェクトはサードパーティ依存を持たない設計です。
 SwiftData / URLSession など Apple 純正 framework のみを使用しています。
 
-### 追加してよい依存
+### Dependencies You May Add
 
 - Apple 純正 framework の薄いラッパー（例: KeychainAccess）
 - テスト専用ライブラリ（例: Quick/Nimble）— testTarget にのみ追加
 
-### 追加してはいけない依存
+### Dependencies You Must Not Add
 
 - RxSwift / Combine ベースのライブラリ（async/await に統一）
 - 巨大な UI フレームワーク（SwiftUI に統一）
@@ -208,7 +208,7 @@ SwiftData / URLSession など Apple 純正 framework のみを使用していま
 
 ---
 
-## SwiftLint ルールの変更
+## Changing SwiftLint Rules
 
 `.swiftlint.yml` を変更する際のルール：
 
@@ -218,23 +218,23 @@ SwiftData / URLSession など Apple 純正 framework のみを使用していま
 
 ---
 
-## トラブルシューティング
+## Troubleshooting
 
-### Lint エラー
+### Lint Errors
 
 ```bash
 make format   # 自動修正
 make lint     # 再チェック
 ```
 
-### ビルド失敗
+### Build Failures
 
 ```bash
 make clean
 make build    # フル出力で確認
 ```
 
-### パッケージ解決の問題
+### Package Resolution Issues
 
 ```bash
 # Swift Package Manager
@@ -246,7 +246,7 @@ xcodebuild -resolvePackageDependencies -project "[AppName].xcodeproj"
 
 ---
 
-## デバッグ
+## Debugging
 
 <!-- TODO: プロジェクト固有のデバッグ手順をここに記入する -->
 
@@ -254,11 +254,11 @@ xcodebuild -resolvePackageDependencies -project "[AppName].xcodeproj"
 
 ---
 
-## Xcode プロジェクト作成時の手順
+## Steps for Creating the Xcode Project
 
 テンプレートは `.xcodeproj` を含まない。新規プロジェクト開始時に Xcode で作成する。
 
-### 1. プロジェクト作成
+### 1. Create the Project
 
 Xcode > File > New > Project でアプリを作成する。
 
@@ -267,7 +267,7 @@ Xcode > File > New > Project でアプリを作成する。
 - **Language**: Swift
 - **Include Tests**: チェックしてもしなくても良い（後述）
 
-### 2. ソースファイルの配置
+### 2. Place the Source Files
 
 Xcode が生成するアプリソース（`[AppName]App.swift` 等）を `App/` に移動する。
 プラットフォームが複数の場合は `App/macOS/`・`App/iOS/` に分ける。
@@ -285,24 +285,24 @@ App/
 
 Xcode のプロジェクトナビゲーターでもフォルダ参照を `App/` に合わせること。
 
-### 3. Core パッケージを追加
+### 3. Add the Core Package
 
 Xcode > File > Add Package Dependencies...
 
 ローカルパッケージとして `Packages/Core` を追加し、アプリターゲットにリンクする。
 
-### 4. 自動生成されたテストターゲットの扱い
+### 4. Handling Auto-Generated Test Targets
 
 Xcode が自動生成する `[AppName]Tests`・`[AppName]UITests` はユニットテストを置く場所ではない（ユニットテストは `Packages/Core/Tests/CoreTests/` に置く）。
 
 - **削除推奨**: ロジックテストは Core 側に集約するため、不要なら削除してよい
 - **残す場合**: UI テスト（XCUITest）のみに限定して使う
 
-### 5. `.gitignore` の確認
+### 5. Check `.gitignore`
 
 自動生成された `[AppName].xcodeproj/xcuserdata/` 等がコミットされないことを確認する。
 
-### 6. macOS + iOS + Widget を組み合わせる場合の Bundle ID
+### 6. Bundle ID When Combining macOS + iOS + Widget
 
 `project.yml` の Widget（`type: app-extension`, `supportedDestinations: [iOS, macOS]`）を
 macOS App と iOS App の**両方**に埋め込む場合、Bundle ID は以下の規則に必ず従うこと：
@@ -324,7 +324,7 @@ Purchase 的な構成）して回避するのではなく、Widget 側を SDK �
 
 ---
 
-## Example コードの削除手順
+## Steps to Remove Example Code
 
 `ExampleFeature` はテンプレートのサンプルです。
 実際のプロジェクト開始後、最初の本番フィーチャーが動作したら以下を削除してください。

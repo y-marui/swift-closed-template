@@ -1,10 +1,10 @@
 # アーキテクチャ
 
-## 概要
+## Overview
 
 Clean Architecture 原則に基づき、厳格な依存ルールを持つ 4 層構造で構成されています。
 
-## レイヤー図
+## Layer Diagram
 
 ```
 ┌─────────────────────────────────┐
@@ -30,7 +30,7 @@ Clean Architecture 原則に基づき、厳格な依存ルールを持つ 4 層�
 └─────────────────────────────────┘
 ```
 
-## データフロー
+## Data Flow
 
 ```
 ユーザー操作
@@ -44,7 +44,7 @@ Clean Architecture 原則に基づき、厳格な依存ルールを持つ 4 層�
 @Observable により View が自動で再描画
 ```
 
-## ViewModel パターン
+## ViewModel Pattern
 
 すべての ViewModel は `@MainActor @Observable`（iOS 17+）を使用します：
 
@@ -63,7 +63,7 @@ final class FeatureViewModel {
 }
 ```
 
-## 依存注入
+## Dependency Injection
 
 `AppDependency` はオブジェクト生成の唯一の責務を持ちます。
 `App.swift` で一度だけ生成し、`init` 経由で下位に渡します。
@@ -80,12 +80,12 @@ func makeFeatureViewModel() -> FeatureViewModel {
 
 ---
 
-## アーキテクチャ変更履歴
+## Architecture Change Log
 
 アーキテクチャの変更履歴をここに記録します。
 **なぜその決定をしたか**を残すことが目的です。
 
-### 記録フォーマット
+### Record Format
 
 ```
 ## YYYY-MM-DD: 変更タイトル
@@ -96,7 +96,7 @@ func makeFeatureViewModel() -> FeatureViewModel {
 **影響範囲:** 変更が影響するファイル・レイヤー
 ```
 
-### 変更を記録するタイミング
+### When to Record a Change
 
 以下の変更を行ったとき、必ずこのファイルに追記してください。
 
@@ -107,7 +107,7 @@ func makeFeatureViewModel() -> FeatureViewModel {
 
 ---
 
-### 2026-01-01: テンプレート初期設計
+### 2026-01-01: Initial Template Design
 
 **背景:** iOS 17+ を最低ターゲットとした新規プロジェクト向けのテンプレートが必要だった。
 AI支援開発（Claude Code, GitHub Copilot）を前提とした設計にする必要があった。
