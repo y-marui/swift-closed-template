@@ -3,7 +3,7 @@
 ファイルレベルの依存関係を記録します。
 初回のコードベース探索後に追記し、変更のたびに更新してください。
 
-## 記録フォーマット
+## Record Format
 
 ```
 ファイル: パス/から/ファイル.swift
@@ -15,7 +15,7 @@
 
 ---
 
-## エントリーポイント
+## Entry Points
 
 | ファイル | 役割 |
 |---|---|
@@ -24,7 +24,7 @@
 
 ---
 
-## 依存関係マップ
+## Dependency Map
 
 > ここにプロジェクト固有のファイルマップを記録してください。
 > 例: `AppDependency.swift` → `ExampleRepository.swift` → `ExampleRepositoryProtocol.swift`

@@ -9,7 +9,7 @@
 
 小規模チーム・AI支援開発・長期保守を前提に最適化されたテンプレートです。
 
-## プロジェクト概要
+## Project Overview
 
 > **新規プロジェクト適用時:** 以下の `<!-- TODO -->` をすべてプロジェクト固有の情報に置き換えてください。
 
@@ -20,7 +20,7 @@
 - **ターゲット:** iOS 17+ / macOS 14+
 - **チーム規模:** <!-- TODO: 例: 個人 / 2〜3人 -->
 
-### フィーチャー一覧
+### Feature List
 
 <!-- TODO: 実装予定または実装済みのフィーチャー一覧に置き換えてください。例:
 | フィーチャー | 状態 | 説明 |
@@ -34,7 +34,7 @@
 |---|---|---|
 | ExampleFeature | 📋 削除予定 | テンプレートのサンプル。最初の本番フィーチャー完成後に削除 |
 
-### 技術スタック
+### Tech Stack
 
 | Concern | Solution |
 |---|---|
@@ -44,7 +44,7 @@
 | Dependency Injection | Manual (AppDependency) |
 | Testing | XCTest + mocks |
 
-### 環境変数
+### Environment Variables
 
 <!-- TODO: 環境変数・APIキー・エンドポイントを記載してください。例:
 | 変数名 | 設定場所 | 説明 |
@@ -60,7 +60,7 @@
 
 ---
 
-## 使い方
+## Use this template
 
 1. GitHub で **"Use this template"** → **"Create a new repository"** をクリック
 2. リポジトリをクローンして `cd` で移動
@@ -69,7 +69,7 @@
 5. すべての `Example` をフィーチャー名に置き換える（[AI_CONTEXT.md](AI_CONTEXT.md) 参照）
 6. 上記「プロジェクト概要」セクションをアプリの情報で更新する
 
-### セットアップチェックリスト
+### Setup Checklist
 
 - [ ] 「プロジェクト概要」セクションの `<!-- TODO -->` をすべて埋める
 - [ ] CI バッジの URL を実際のリポジトリ URL に変更する
@@ -81,7 +81,7 @@
 - [ ] 最初の本番フィーチャーが動作したら `ExampleFeature` を削除する（手順: [`CONTRIBUTING.md`](CONTRIBUTING.md)）
 - [ ] 署名付き DMG 配布（`make deploy` / `make deploy-release`、`.env` の `DEPLOY_DMG=true`）を使う場合は `Makefile` の `TEAM_ID` / `DEVELOPER_NAME` をプロジェクト固有の値に置き換える（空のままだと `scripts/build-dmg.sh` がエラーになる）
 
-## 特徴
+## Features
 
 - ✅ Clean Architecture（Feature / Domain / Infrastructure）
 - ✅ `@Observable` ViewModel（iOS 17+）
@@ -93,13 +93,13 @@
 - ✅ GitHub Actions CI（lint + test）
 - ✅ AI 向けコンテキストファイル（`AI_CONTEXT.md`、README 内プロジェクト概要）
 
-## 動作要件
+## Requirements
 
 - Xcode 15+
 - iOS 17+ / macOS 14+
 - Swift 5.9+
 
-## クイックスタート
+## Quick Start
 
 ```bash
 git clone https://github.com/y-marui/swift-app-template.git
@@ -110,7 +110,7 @@ make bootstrap
 その後、Xcode で新規 iOS プロジェクトを作成し、`Packages/Core` をローカルパッケージとして追加してください。
 詳細は `Package.swift` のコメントを参照。
 
-## コマンド一覧
+## Commands
 
 | コマンド | 説明 |
 |---|---|
@@ -129,7 +129,7 @@ DESTINATION="platform=iOS Simulator,name=iPhone 15" make build
 SCHEME=MyApp make build
 ```
 
-## プロジェクト構造
+## Project Structure
 
 ```
 Package.swift           # ルート — テスト実行・パッケージ管理用
@@ -148,7 +148,7 @@ templates/feature/      # 新規フィーチャー用コードテンプレート
 scripts/                # シェルスクリプト
 ```
 
-## ドキュメント
+## Documentation
 
 - [アーキテクチャ](docs/architecture.md)
 - [仕様](docs/specification.md)
@@ -157,9 +157,9 @@ scripts/                # シェルスクリプト
 
 開発フロー・命名規則・コードレビューチェックリストは [`CONTRIBUTING.md`](CONTRIBUTING.md) を参照してください。
 
-## ランブック
+## Runbook
 
-### Xcode プロジェクトのセットアップ（新規）
+### Xcode Project Setup (New)
 
 1. Xcode > File > New > Project で iOS App を作成
 2. プロジェクト名・Bundle ID を設定し、このリポジトリのルートに保存
@@ -169,7 +169,7 @@ scripts/                # シェルスクリプト
 6. `App/macOS/` 内のファイルをプロジェクトに追加（iOS・Widget がある場合は各フォルダも追加）
 7. `make test` が通ることを確認
 
-### 新しいフィーチャーの追加
+### Adding a New Feature
 
 ```bash
 FEATURE=MyFeature
@@ -181,7 +181,7 @@ cp templates/feature/UseCase.swift.template   Packages/Core/Sources/Core/Feature
 
 `{{FeatureName}}` を実際のフィーチャー名に置換してください。
 
-### リリースフロー
+### Release Flow
 
 ```
 feature/xxx → develop → main → タグ付け
@@ -197,7 +197,7 @@ git tag -a v1.0.0 -m "Release v1.0.0"
 git push origin v1.0.0
 ```
 
-### ホットフィックス
+### Hotfix
 
 ```bash
 git checkout main
@@ -210,7 +210,7 @@ git tag -a v1.0.1 -m "Hotfix v1.0.1"
 git push origin main develop v1.0.1
 ```
 
-### CI が失敗したとき
+### CI Failures
 
 **Lint エラーの場合:**
 ```bash
@@ -232,7 +232,7 @@ swift package resolve --package-path Packages/Core
 make test
 ```
 
-## AI 支援開発
+## AI-Assisted Development
 
-このテンプレートは Claude Code と GitHub Copilot に最適化されています。
+このテンプレートは Claude Code・Codex・GitHub Copilot・Gemini CLI に最適化されています。
 AI が従うべきルールとパターンは [`AI_CONTEXT.md`](AI_CONTEXT.md) を参照してください。

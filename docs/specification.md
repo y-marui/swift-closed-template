@@ -4,7 +4,7 @@
 
 ---
 
-## 機能一覧
+## Feature List
 
 > プロジェクト固有の機能一覧をここに記載してください。
 
@@ -14,9 +14,9 @@
 
 ---
 
-## 機能仕様
+## Feature Specification
 
-### ExampleFeature（削除対象）
+### ExampleFeature (to be removed)
 
 > このセクションはテンプレートです。実際の機能仕様に置き換えてください。
 
@@ -39,11 +39,11 @@
 
 ---
 
-## データモデル
+## Data Model
 
 > プロジェクト固有のドメインモデルをここに記載してください。
 
-### ExampleItem（削除対象）
+### ExampleItem (to be removed)
 
 ```swift
 struct ExampleItem: Identifiable {
@@ -55,7 +55,7 @@ struct ExampleItem: Identifiable {
 
 ---
 
-## 状態管理
+## State Management
 
 > 各フィーチャーの ViewState を記載してください。
 

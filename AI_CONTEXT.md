@@ -3,7 +3,7 @@
 このファイルを最初に読み、すべての実装判断の基準にしてください。
 憲章参照: `docs/dev-charter/CHARTER_INDEX.md` でトピックを特定してから該当ファイルのみ読む
 
-## コンテキスト優先順位
+## Context Priority
 
 指示が競合する場合は以下の順で優先してください：
 
@@ -12,7 +12,7 @@
 3. **憲章** — `docs/dev-charter/`
 4. **グローバルコンテキスト** — AI のデフォルト知識
 
-## 参照順（Reading Order）
+## Reading Order
 
 AIはタスク開始時に以下の順で参照してください：
 
@@ -105,7 +105,7 @@ Makefile コマンド: `make bootstrap` / `make lint` / `make format` / `make bu
 
 ### Monetization
 
-**Sublime Text 方式**（全機能無料・一定期間使用後に購入ダイアログを表示・購入で解除）。詳細は `MONETIZATION.md` を参照。
+Apple App Store 配信。初回利用から **1 か月間の無料試用**（機能制限なし）、試用終了後は月間/年間サブスクリプションまたは買い切りで継続利用。詳細は `MONETIZATION.md` を参照。
 
 ### Scope Exclusions
 
@@ -231,20 +231,20 @@ func test_onAppear_loadsItems() async {
 
 ## Development Principles
 
-### 開発哲学
+### Development Philosophy
 - まず小さなツールを構築する
 - ローカルファーストのデザインを優先する
 - インフラストラクチャを最小限に保つ
 
-### デザイン
+### Design
 - 高速なインタラクション
 - 最小限のUI
 
-### アーキテクチャ
+### Architecture
 - 最小限の依存関係
 - オフライン機能を優先
 
-### コード設計原則
+### Code Design Principles
 - **変更範囲は必要最小限**（Over-engineering しない）
 - **YAGNI 原則**: 今必要ない機能は実装しない
 - **DRY の判断**: 2 回の重複では抽象化しない、3 回目で検討
@@ -252,7 +252,7 @@ func test_onAppear_loadsItems() async {
 - **TODO/FIXME を残さない**: 実装するか、issue として記録する
 - **既存コードのパターンに従う**: 命名規則・アーキテクチャ・ディレクトリ構造
 
-### コメント方針
+### Comment Policy
 - コメントは「なぜそうするか」のみ書く
 - コードから自明な処理には書かない
 
@@ -262,7 +262,7 @@ func test_onAppear_loadsItems() async {
 
 詳細は [`docs/ui-design.md`](docs/ui-design.md) を参照してください。
 
-### AI が守るべき UI ルール（Guardrail）
+### AI UI Rules (Guardrail)
 
 - **SF Symbols を絶対優先** (`Image(systemName: "...")`)
 - **Unicode 絵文字禁止**: ボタン・ラベル・装飾等における使用は原則禁止（SF Symbols を使う）
@@ -273,7 +273,7 @@ func test_onAppear_loadsItems() async {
 
 ## Localization
 
-### 対応言語
+### Supported Languages
 アプリ内で選択可能な言語:
 
 1. システム設定 (System)
@@ -285,14 +285,14 @@ func test_onAppear_loadsItems() async {
 7. フランス語
 8. ポルトガル語
 
-### 言語決定の優先順位
+### Language Resolution Priority
 1. ユーザー設定
 2. システム言語設定
 3. 英語 (fallback)
 
 ---
 
-## Language Policy (ドキュメント言語)
+## Language Policy (Document Language)
 
 - このプロジェクトは **クローズドプロジェクト** のため、ドキュメントは **日本語を正本** とする
 - `README.md` は英語（国際的な参照用）、`README-jp.md` が日本語版（正本）
@@ -319,8 +319,9 @@ func test_onAppear_loadsItems() async {
 
 ## Monetization Policy
 
-- クローズドな Mac app / iOS app は **Sublime Text 方式** を採用する
-  - 時々購入を促すポップアップを表示し、正式購入で解除
+- Apple App Store で配布する macOS / iOS アプリは **1 か月間の無料試用 → 月間/年間サブスクリプションまたは買い切り** を採用する
+  - 試用期間中はすべての機能を利用可能にし、機能制限を設けない
+  - macOS 版と iOS 版は同一購入に含め、購入権利を共有する
 - 独自の課金システムは禁止（メンテナンスコスト・セキュリティリスク）
 - 詳細は `MONETIZATION.md` を参照する
 
@@ -351,17 +352,17 @@ AIが守るべき手動ルールのみ記載する。
 - **コミット粒度**: 機能単位・動作確認 OK 後
 - **コミットメッセージ**: Conventional Commits 形式（`feat` / `fix` / `refactor` / `docs`）
 - **WIP 禁止**: 動作しないコードはコミットしない
-- **`main` へのコミット**: 必ず他の開発者がレビューする
+- **`main` へのコミット**: 他の開発者がレビューする。個人開発では実装担当と異なる AI によるレビューとオーナーの最終確認で代替できる（`docs/dev-charter/SECURITY_POLICY.md` の Code Review 参照）
 
 ---
 
 ## AI Collaboration Rules
 
-### AI 行動原則
+### AI Behavior Principles
 - **Scope（スコープ厳守）**: 会話の主題・タスク・ゴールを AI が勝手に変更しない。話題変更はユーザーが明示するか、AI の提案をユーザーが許可した場合のみ
 - **Uncertainty（不明点の扱い）**: 重要な情報不足や曖昧さは質問する。軽微な不足は合理的な仮定で補い、仮定を明示する。推測で断定しない
 
-### コーディング前の確認
+### Pre-Coding Confirmation
 不明・未定の項目があれば**作業前に 1 回でまとめて**質問する。推測で進めない。
 
 **確認必須:**
@@ -374,30 +375,26 @@ AIが守るべき手動ルールのみ記載する。
 **確認不要（既存コードに合わせて進める）:**
 - コードスタイル / ファイル配置 / 軽微な実装詳細
 
-### エラー・デバッグ対応
+### Error & Debug Handling
 - エラー発生時は**原因分析 → 修正方針説明 → 実装**の順で進める
 - エラーログ・スタックトレースは必ず全文確認してから対応
 - 推測で修正しない（必要なら既存コードを確認）
 - デバッグ用の `console.log` / `print` 文は本番コードに残さない
 
-### 作業スタンス
+### Work Stance
 - 大きな変更前に方針を説明してから着手する
 - 不要な依存追加禁止: 既存の依存で解決できないか先に検討する
 
-### dev-charter 変更ルール
+### dev-charter Modification Rules
 `docs/dev-charter/` 配下のファイルは**直接編集しない**。
 - 変更が必要な場合は dev-charter リポジトリ本体に Issue を立て、`git subtree pull` でアップデートを取り込む
 - プロジェクト固有のルールは `AI_CONTEXT.md` または専用ファイルに記載する
 
-### AI ツールの役割分担
-| ツール | 担当 |
-|---|---|
-| **Claude Code** | プロジェクト立ち上げ・大規模コード変更・アーキテクチャ設計とリファクタリング提案 |
-| **GitHub Copilot** | バグ修正・細かな実装とコーディング補助・単体テスト作成 |
-| **Gemini CLI** | プライバシーポリシー・ストア説明文・審査用ドキュメント・プロジェクト全体のドキュメント管理 |
+### AI Tool Assignments
 
-- Claude Code 作業中は Copilot 提案を**参考程度**に（盲目的に受け入れない）
-- Copilot の提案がプロジェクト規約に反する場合は無視し、Claude Code でレビュー後に採用
+- **使用ツール**：Claude Code、Codex、GitHub Copilot、Gemini CLI
+- **標準担当の正本**：`docs/dev-charter/AI_COLLABORATION_RULES.md` の「AI Tool Responsibilities」と「Rules for Multi-AI Usage」
+- **プロジェクト固有の上書き**：なし
 
 ---
 

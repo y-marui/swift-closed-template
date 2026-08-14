@@ -1,6 +1,6 @@
 # ローカライゼーション
 
-## 対応言語
+## Supported Languages
 
 | 言語 | Locale ID |
 |---|---|
@@ -13,19 +13,19 @@
 | フランス語 | `fr` |
 | ポルトガル語 | `pt` |
 
-## 言語決定の優先順位
+## Language Resolution Priority
 
 1. アプリ内のユーザー設定
 2. システム言語設定
 3. 英語（フォールバック）
 
-## セットアップ手順（Xcode）
+## Setup Steps (Xcode)
 
 1. プロジェクト設定 > Info > Localizations に上記言語をすべて追加する
 2. `String(localized:)` または `LocalizedStringKey` を使って文字列を定義する
 3. このディレクトリに `Localizable.xcstrings`（String Catalog）を作成する
 
-## 文字列の使い方
+## How to Use Strings
 
 ```swift
 // ✅ 推奨: String Catalog (Xcode 15+)
@@ -37,7 +37,7 @@ Text("タイトル")
 Button("Retry") { ... }
 ```
 
-## キー命名規則
+## Key Naming Convention
 
 ```
 <スコープ>.<内容>

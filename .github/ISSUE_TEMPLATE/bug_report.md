@@ -6,27 +6,27 @@ labels: bug
 assignees: ""
 ---
 
-## 環境
+## Environment
 
 - Swift バージョン: <!-- 例: 5.9.2 -->
 - Xcode バージョン: <!-- 例: 15.4 -->
 - macOS バージョン: <!-- 例: 14.5 -->
 - iOS デプロイターゲット: <!-- 例: 17.0 -->
 
-## 再現手順
+## Steps to Reproduce
 
 1.
 2.
 3.
 
-## 期待する動作
+## Expected Behavior
 
 <!-- どうなることを期待していましたか？ -->
 
-## 実際の動作
+## Actual Behavior
 
 <!-- 実際に何が起きましたか？エラーメッセージやログがあれば記載してください。 -->
 
-## 追加情報
+## Additional Information
 
 <!-- スクリーンショット・関連 Issue・その他参考になる情報があれば記載してください。 -->

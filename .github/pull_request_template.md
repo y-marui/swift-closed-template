@@ -1,8 +1,8 @@
-## 概要
+## Summary
 
 <!-- 変更内容とその背景を説明してください。 -->
 
-## 変更の種類
+## Type of Change
 
 - [ ] バグ修正 (`fix`)
 - [ ] 新機能・テンプレート追加 (`feat`)
@@ -11,7 +11,7 @@
 
 > コミットメッセージは Conventional Commits 形式で記述してください（`feat:`, `fix:`, `refactor:`, `docs:`）。
 
-## コードレビューチェックリスト
+## Code Review Checklist
 
 - [ ] Feature が Infrastructure を直接 import していないか
 - [ ] Domain モデルに framework の import がないか
@@ -21,11 +21,11 @@
 - [ ] `force_unwrap`（`!`）を使っていないか
 - [ ] 動作確認済みのコードのみ含まれているか（WIP は含めない）
 
-## テスト確認
+## Test Verification
 
 - [ ] `make test` が通ることを確認した
 - [ ] `make lint` が 0 violations であることを確認した
 
-## 関連 Issue
+## Related Issue
 
 <!-- Closes # -->
