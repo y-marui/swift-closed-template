@@ -101,6 +101,9 @@ clean:
 	@if [ -d "$(HOME)/Library/Developer/Xcode/DerivedData" ]; then SCHEME_ESC=$$(echo "$(SCHEME)" | tr ' ' '_'); find "$(HOME)/Library/Developer/Xcode/DerivedData" -maxdepth 1 -name "$${SCHEME_ESC}-*" -exec rm -rf {} +; fi
 
 update-charter:
+	git remote | grep -q '^dev-charter$$' || \
+	  git remote add dev-charter https://github.com/y-marui/dev-charter
+	git fetch dev-charter
 	git subtree pull --prefix=docs/dev-charter dev-charter main --squash
 
 unlock-keychain:
