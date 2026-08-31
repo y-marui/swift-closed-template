@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, develop, update-charter]
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     branches: [main, develop]
@@ -117,7 +117,7 @@ jobs:
             build
 
   gate:
-    name: Required Checks
+    name: CI
     needs: [changes, security, lint, test, build]
     if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
