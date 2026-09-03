@@ -23,11 +23,17 @@
 | `lint` | `Lint` | コードスタイル・フォーマット検査 |
 | `test` | `Test` / `Test (pytest)` など | ユニットテスト・インテグレーションテスト |
 | `build`（任意） | `Build` | ビルド成果物の生成、またはインストール可能性の検証 |
-| `gate` | `Required Checks` | 全 job の集約ゲート（後述）。必ず存在する |
+| `gate` | ワークフロー自身の `name`（例：`CI`、`Dev Charter`） | 全 job の集約ゲート（後述）。必ず存在する |
 
-`gate` は全 job の集約点として必ず最後に配置し、Branch Protection（Ruleset）の必須ステータス
-チェックには常に `Required Checks` を登録する（`Build` ではない）。job 名に `build` を
-使うのは、実際にビルド成果物を作る job（任意・実体のあるビルドがない場合は省略）だけ。
+`gate` は全 job の集約点として必ず最後に配置し、その `name` はワークフロー自身の `name`
+（トップレベルの `name:`）と同じ文字列にする。Branch Protection（Ruleset）の必須ステータス
+チェックには常にこの値（例：`ci.yml` なら `CI`）を登録する（`Build` ではない）。job 名に
+`build` を使うのは、実際にビルド成果物を作る job（任意・実体のあるビルドがない場合は省略）だけ。
+
+1リポジトリに複数のワークフローファイルがある場合（`ci.yml` と `dev-charter-check.yml` の
+併用など）、各ワークフローの `name:` は互いに異なる値にする。`gate` の `name` をワークフロー
+自身の `name` と一致させる規則により、複数の `gate` が同じチェック名を報告して Ruleset 上で
+衝突する事態を自然に避けられる。
 
 ## Job Design
 
@@ -44,10 +50,10 @@
     リポジトリはそこから実プロジェクトが構築される前提のため、最初から
     `security`/`lint`/`test`/`build`/`gate` の完全な構成にしておく方が良い出発点になる
     （単一jobのまま複製されると、後から分割する手間を新プロジェクト側に残してしまう）
-- Ruleset設定：`Required Checks`（`gate` job の `name`）のみ指定（全リポジトリ共通）
+- Ruleset設定：ワークフロー自身の `name`（`gate` job の `name` と一致）のみ指定（全リポジトリ共通）
 
-この方針により、job を増減しても Ruleset の変更が不要になる（`gate` という役割・名前が
-常に固定されているため）。
+この方針により、job を増減しても Ruleset の変更が不要になる（`gate` の `name` はワークフロー
+自身の `name` に固定されており、job 構成の変更とは独立しているため）。
 
 ### `gate` Is a Gate, Not Just a `needs` Aggregation
 
@@ -65,7 +71,7 @@
 
 ```yaml
 gate:
-  name: Required Checks
+  name: CI   # ワークフロー自身の name: と同じ値にする
   needs: [security, lint, test]   # build 等があれば追加
   if: always()
   runs-on: ubuntu-latest   # ゲートは判定のみなので常に最安ランナーでよい
@@ -91,12 +97,12 @@ build:
   needs: [security, lint, test]
   runs-on: macos-latest
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - run: pip install -e .
     - run: python -c "import mypackage"
 
 gate:
-  name: Required Checks
+  name: CI
   needs: [security, lint, test, build]
   if: always()
   runs-on: ubuntu-latest
@@ -111,9 +117,10 @@ gate:
         done
 ```
 
-**単一job（極小プロジェクト）：** ビルド・検証の実処理を `gate`（`name: Required Checks`）の
-中に直接書く。job を分ける必要がないだけで、Ruleset に登録する名前は常に `Required Checks`
-のまま変わらない。**`*-template` リポジトリには適用しない**（[Job Design](#job-design)参照）。
+**単一job（極小プロジェクト）：** ビルド・検証の実処理を `gate`（`name` はワークフロー自身の
+`name` と同じ値、例：`CI`）の中に直接書く。job を分ける必要がないだけで、Ruleset に登録する
+名前はワークフローの `name` のまま変わらない。**`*-template` リポジトリには適用しない**
+（[Job Design](#job-design)参照）。
 
 ### Cost Optimization (Path Filtering)
 
@@ -123,8 +130,8 @@ gate:
 
 **ワークフロー単位の `paths-ignore` は使わない。** ワークフロー自体がトリガーされないと
 必須ステータスチェックが一切報告されず、PR が `Expected — Waiting for status to be
-reported` のまま永久にブロックされる（`gate`＝`Required Checks` が Ruleset の必須チェック
-である場合）。
+reported` のまま永久にブロックされる（`gate` の `name`（ワークフロー自身の `name`）が
+Ruleset の必須チェックである場合）。
 
 代わりに [dorny/paths-filter](https://github.com/dorny/paths-filter) で変更内容を判定し、
 **job-level の `if:`** で `lint`/`test`/`build` をスキップする。`security`
@@ -143,10 +150,13 @@ jobs:
     name: Detect changes
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       code: ${{ steps.filter.outputs.code }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dorny/paths-filter@v4
         id: filter
         with:
@@ -193,7 +203,7 @@ jobs:
     # ...
 
   gate:
-    name: Required Checks
+    name: CI
     needs: [changes, security, lint, test, build]
     # draft は always() でも実行しない: draft はそもそもマージ不可なので、
     # チェックが未報告のままでも「詰まる」リスクがない（docs-only スキップとは
@@ -219,6 +229,24 @@ jobs:
           done
 ```
 
+### Concurrency (Cancel Superseded Runs)
+
+同じブランチ/PRに素早く連続でpushすると、古いrunが完走するまで新しいrunと並行して
+走り続け、Actions分・実時間を無駄に消費する（`macos-latest`・`windows-latest`は
+`ubuntu-latest`より分あたりのコストが高いため特に影響が大きい）。ワークフローの
+トップレベルに以下を追加し、同一ワークフロー・同一refで新しいrunが始まったら
+古いrunを自動キャンセルする：
+
+```yaml
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+```
+
+キャンセルされたrunは `cancelled` として終了するが、Ruleset の必須ステータスチェックは
+常に最新commitのrunの結果だけを見るため、マージ可否の判定には影響しない。デメリットが
+ないため、全ワークフローファイル（`ci.yml`・`dev-charter-check.yml` 等）に一律で追加する。
+
 ### Draft PRs
 
 `ready_for_review` を `on.pull_request.types` に加えた上で、`changes`・`security`・`gate`
@@ -234,6 +262,11 @@ jobs:
 
 `.github/workflows/dev-charter-check.yml` も同様に draft をスキップする（[Version Check
 (CI)](../README.md#version-check-ci) 参照）。
+
+`check-charter.yml` が作成する `update-charter` PR も Draft で始まるため、この
+`ready_for_review` は更新 PR にも必須である。`gh pr ready` で Draft を解除した時点で
+CI と Dev Charter チェックが再実行され、更新内容を含む状態で Ruleset の判定を受ける。
+テンプレートからこのイベントを除外してはいけない。
 
 **依存ロックファイル（`uv.lock` / `package-lock.json` / `Package.resolved` 等）は
 skip 対象に含めない。** ロックファイルの更新は依存パッケージのバージョン変更そのものであり、
@@ -257,7 +290,18 @@ skip 対象に含めない。** ロックファイルの更新は依存パッケ
 
 ## Branch Protection (Ruleset)
 
-`main` ブランチに以下のRulesetを適用する（全リポジトリ共通）：
+> **lite 採用先への注意:** このセクションは `full`（PR必須運用）向けの既定値。
+> lite 採用先（`main` への直接pushを許可する運用）は
+> [CI_POLICY.md](https://github.com/y-marui/dev-charter/blob/lite/topics/CI_POLICY.md)（lite）
+> の「Branch Protection (Ruleset)」に専用の設定があるので、そちらに従うこと
+> （以降このセクションを読み替える必要はない）。
+
+この Ruleset はサーバ側で **push** のみを止める。デフォルトブランチにローカルで
+コミットを重ねてしまうこと自体は防げないため、`full` 版では
+`check-not-on-default-branch` フック（`SECURITY_POLICY.md` 参照）がコミット
+時点で同じ制約を機械的に強制する。両者は代替ではなく補完関係にある。
+
+`main` ブランチに以下のRulesetを適用する（`full` 版共通。lite は上記の注意を参照）：
 
 ```
 Name: main-protection
@@ -268,36 +312,73 @@ Rules:
 ☑ Require a pull request before merging
   └ Required approvals: 0（個人開発）/ 1以上（複数人）
 ☑ Require status checks to pass before merging
-  └ Status checks: Required Checks (GitHub Actions)
-  └ Status checks: Check / check (GitHub Actions)
+  └ Status checks: CI (GitHub Actions)
+  └ Status checks: Dev Charter (GitHub Actions)
 ☑ Require conversation resolution before merging
 ☑ Block force pushes
 ☑ Restrict deletions
 ```
 
-`Check / check` は `.github/workflows/dev-charter-check.yml` が呼び出す再利用ワークフロー
-（`check-charter.yml`）のチェック名。`ci.yml` とは別ワークフローファイルのため `gate` の
-`needs` には含められない（`needs` は同一ワークフローファイル内でしか機能しない）ので、
-Ruleset には別エントリとして登録する。
+`Dev Charter` は `.github/workflows/dev-charter-check.yml`（[Version Check
+(CI)](../README.md#version-check-ci) 参照）の `gate` job の `name`（ワークフロー自身の
+`name: Dev Charter` と一致させたもの。[§ Naming Convention](#naming-convention)参照）。
+同ワークフローの `check` job は `.github/workflows/dev-charter-check.yml` が呼び出す
+再利用ワークフロー（`check-charter.yml`）で、Dependabot PR・draft PR では job-level の
+`if:` でスキップされる。`ci.yml` とは別ワークフローファイルのため `gate` の `needs` には
+含められない（`needs` は同一ワークフローファイル内でしか機能しない）ので、Ruleset には
+別エントリとして登録する。`ci.yml` 側の `gate`（`name: CI`）と名前が異なるため、複数
+ワークフローの `gate` を同一 Ruleset に登録しても衝突しない。
 
-このチェックは「dev-charter が最新でない」場合も **意図的に失敗する**（`update-charter` の
-draft PR を自動作成した上で `exit 1`）。schedule トリガーが無くなり `pull_request`/`push`
-イベント駆動のみになったため、成功で終わらせてしまうと更新 PR が誰にも気づかれないまま
-放置され、無関係な PR がどんどんマージされてしまう。失敗させることで「今動いている PR/push」
-の場で必ず対応を迫る。
+**`Check / check` を直接 Ruleset に登録してはいけない。** `check` は `uses:` で再利用
+ワークフローを呼ぶ job のため、GitHub は再利用ワークフロー側の job が実際に開始されて
+初めて `Check / check` という複合チェック名を生成する。job-level の `if:` が false（全
+Dependabot PR）になると再利用ワークフローが一度も呼ばれず、`Check / check` というコンテ
+キスト自体が `skipped` としてすら報告されない。Ruleset は `Check / check` が報告される
+のを待ち続け、該当 PR は `Expected — Waiting for status to be reported` のまま永久に
+ブロックされる（`gate` の `needs` を欠いた集約 job が `skipped` を `success` 扱いされる
+[§ `gate` Is a Gate, Not Just a `needs` Aggregation](#gate-is-a-gate-not-just-a-needs-aggregation)
+とは逆に、こちらは「単独 job をそのまま Ruleset に登録すると `skipped` が一切報告されない」
+という別種の罠）。`gate` job（普通の job のため `check` の実行有無に関わらず必ず自身の
+チェック名を報告する）を挟み、`needs.check.result` を検査して `skipped` は成功扱い、
+`failure`/`cancelled` のみ失敗させることで回避する（実装は [Version Check
+(CI)](../README.md#version-check-ci) のテンプレート参照。2026-08 に実際に発覚・修正、
+詳細は [Issue #81](https://github.com/y-marui/dev-charter/issues/81)）。
+
+`check` job（`check-charter.yml`）自体は「dev-charter が最新でない」場合も **意図的に
+失敗する**（`update-charter` の draft PR を自動作成した上で `exit 1`）。schedule トリガー
+が無くなり `pull_request`/`push` イベント駆動のみになったため、成功で終わらせてしまうと
+更新 PR が誰にも気づかれないまま放置され、無関係な PR がどんどんマージされてしまう。失敗
+させることで「今動いている PR/push」の場で必ず対応を迫る。`gate` はこの `failure` を
+そのまま自身の失敗として伝播するため、Ruleset 上のブロック効果は維持される。
 
 それ以外の失敗条件（リモート `VERSION` の取得失敗・ローカル `VERSION` の欠落・push や
 PR 作成時のエラー・GitHub Actions の課金ブロックなど）ももちろん失敗する。
 
-### Bypass for Billing-Blocked CI (Private Repos, Provisional)
+### Epic Branch Ruleset
 
-Private リポジトリは GitHub Actions の課金対象（Public リポジトリは無料）。開発リソースが
-限られる個人開発では、支払い方法・spending limit の問題で CI が丸ごと失敗し、必須チェック
-がブロックされたままになることがある（`~/.ai/AI_CONTEXT.md` の GitHub セクションに同様の
-運用メモあり：課金エラーによる CI 失敗はコード側の問題ではないため無視してよい）。
+複数ステップ・sub-issue を持つ大規模な改修用の `epic/<name>` ブランチ（[PROJECT_LIFECYCLE.md](../PROJECT_LIFECYCLE.md) の Branch Strategy 参照）にも、パターンマッチで `main-protection` と同じRulesetを適用する：
 
-暫定処置として、Private リポジトリの `main-protection` Ruleset に **Repository admin の
-bypass（PR 経由のみ）** を追加してよい（Ruleset の `bypass_actors` に以下を追加）：
+```
+Name: epic-protection
+Target: epic/*
+Enforcement: Active
+
+Rules:
+☑ Require a pull request before merging
+  └ Required approvals: 0（個人開発）/ 1以上（複数人）
+☑ Require status checks to pass before merging
+  └ Status checks: CI (GitHub Actions)
+☑ Require conversation resolution before merging
+☑ Block force pushes
+☑ Restrict deletions
+```
+
+`epic/<name>` から `main` へのPRには、通常どおり `main-protection` のRulesetがそのまま適用される。
+
+### Bypass Actor (Repository Admin)
+
+`main-protection` Ruleset には、Public/Private を問わず全リポジトリで **Repository admin
+の bypass（PR 経由のみ）** を登録する（Ruleset の `bypass_actors` に以下を追加）：
 
 ```json
 {
@@ -309,8 +390,13 @@ bypass（PR 経由のみ）** を追加してよい（Ruleset の `bypass_actors
 
 - `actor_id: 5` は Repository admin ロール（個人リポジトリでは実質オーナー本人）
 - `bypass_mode: "pull_request"` — 直接 push は引き続き禁止。PR 経由でのマージ時のみ
-  必須チェックをバイパスできる（`"always"` にはしない）
-- Public リポジトリには適用しない（CI が無料で課金ブロックが起きないため不要）
+  必須チェックをバイパスできる（`"always"` にはしない。`"always"` は lite 版専用の
+  設計で、[CI_POLICY.md](https://github.com/y-marui/dev-charter/blob/lite/topics/CI_POLICY.md)（lite）を参照）
+- 用途は、Private リポジトリの課金ブロック（支払い方法・spending limit の問題で CI が
+  丸ごと失敗するケース。`~/.ai/AI_CONTEXT.md` の GitHub セクションに同様の運用メモあり：
+  課金エラーによる CI 失敗はコード側の問題ではないため無視してよい）に限らず、
+  インフラ障害・flaky なランナーなど、コードの問題ではない理由で必須チェックが
+  ブロックされたままになるケース全般への緊急避難とする
 - ローカルで `pre-commit run` 等により変更内容を確認済みの場合のみ使う。CI が本当に
   コードの問題で落ちているときの緊急回避には使わない
 - 設定は GitHub の Settings → Rules → Rulesets（または `gh api` で既存 Ruleset 全体を
@@ -322,13 +408,15 @@ bypass（PR 経由のみ）** を追加してよい（Ruleset の `bypass_actors
 Rulesetの「Require status checks to pass before merging」でチェックを追加する際は、**名前とソースの両方を正しく指定**する。
 
 **チェック名：**
-GitHub Actions のステータスチェック名は、job の **`name` フィールドの値**（`Required Checks`）
-で決まる。job ID（`gate`）ではないため注意。
+GitHub Actions のステータスチェック名は、job の **`name` フィールドの値**（`gate` の場合、
+ワークフロー自身の `name:` と同じ値。例：`CI`）で決まる。job ID（`gate`）ではないため注意。
 
 ```yaml
+name: CI   # ワークフロー自身の name:
+
 jobs:
   gate:
-    name: Required Checks   # ← Rulesetに登録する名前はこの値
+    name: CI   # ← Rulesetに登録する名前はこの値。ワークフローの name: と一致させる
 ```
 
 job `name` を省略した場合は job ID がチェック名になる（例：`gate`）。
@@ -340,8 +428,8 @@ job `name` を省略した場合は job ID がチェック名になる（例：`
 Rulesetの設定画面では以下のように表示される：
 
 ```
-Check name:  Required Checks
+Check name:  CI
 Source:      GitHub Actions
 ```
 
-集約ゲート job の `name` は説明を追加せず、常に `Required Checks` とする。個別 job の表示名は必要に応じて説明を追加してよい。
+集約ゲート job の `name` は説明を追加せず、常にそのワークフロー自身の `name:` と同じ値にする。個別 job の表示名は必要に応じて説明を追加してよい。

@@ -74,14 +74,16 @@ AI ツール設定ファイルの詳細な構成仕様（セクション定義�
 
 - `README.md` と `README-jp.md` は日英ペアで管理し、同一コミットで更新する
 - `README.md` は `docs/` の詳細ファイルへの索引とし、詳細を重複させない
-  - プロジェクト README の構成詳細: [topics/PROJECT_README_GUIDELINES.md](topics/PROJECT_README_GUIDELINES.md)
-  - テンプレートリポジトリ自体の README 設計: [topics/TEMPLATE_README_GUIDELINES.md](topics/TEMPLATE_README_GUIDELINES.md)
+  - プロジェクト README の構成詳細（`full` 版）: [topics/PROJECT_README_GUIDELINES.md](https://github.com/y-marui/dev-charter/blob/full/topics/PROJECT_README_GUIDELINES.md)
+  - テンプレートリポジトリ自体の README 設計（`full` 版）: [topics/TEMPLATE_README_GUIDELINES.md](https://github.com/y-marui/dev-charter/blob/full/topics/TEMPLATE_README_GUIDELINES.md)
 
 ---
 
 ## docs/ Directory
 
 プロジェクト内の `docs/` ディレクトリに配置する標準ファイルを定める。
+
+`docs/` は「現在こうなっている」という恒久的な情報のみを扱う。TODO・バックログ・スプリント計画・ロードマップ等の一時的な情報は含めず、GitHub の Issues/Sub-issues/Milestones/Projects (v2) で管理する（[topics/GITHUB_PROJECT_MANAGEMENT.md](topics/GITHUB_PROJECT_MANAGEMENT.md) 参照）。
 
 ### Common Files
 
@@ -174,7 +176,7 @@ _最終更新: YYYY-MM-DD_
 | プロジェクト種別 | ファイル | 内容 |
 |---|---|---|
 | Alfred ワークフロー | `docs/configuration-builder.md` | 設定ビルダーの仕様 |
-| GitHub テンプレートリポジトリ | `README_TEMPLATE.md` / `README_TEMPLATE-jp.md` | プロジェクト化後の README 雛形（[topics/TEMPLATE_README_GUIDELINES.md](topics/TEMPLATE_README_GUIDELINES.md) 参照） |
+| GitHub テンプレートリポジトリ | `README_TEMPLATE.md` / `README_TEMPLATE-jp.md` | プロジェクト化後の README 雛形（`full` 版の [topics/TEMPLATE_README_GUIDELINES.md](https://github.com/y-marui/dev-charter/blob/full/topics/TEMPLATE_README_GUIDELINES.md) 参照） |
 
 ---
 
