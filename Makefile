@@ -1,4 +1,3 @@
-SHELL := /bin/bash
 .PHONY: bootstrap lint format test ensure-xcode-project xcodegen build ios ios-release register-widget deploy deploy-release dmg clean update-charter unlock-keychain
 
 -include .env
@@ -101,7 +100,7 @@ clean:
 	@if [ -d "$(HOME)/Library/Developer/Xcode/DerivedData" ]; then SCHEME_ESC=$$(echo "$(SCHEME)" | tr ' ' '_'); find "$(HOME)/Library/Developer/Xcode/DerivedData" -maxdepth 1 -name "$${SCHEME_ESC}-*" -exec rm -rf {} +; fi
 
 update-charter:
-	CHARTER_UPDATE_ONLY=1 bash <(curl -fsSL https://raw.githubusercontent.com/y-marui/dev-charter/main/scripts/install.sh)
+	curl -fsSL https://raw.githubusercontent.com/y-marui/dev-charter/main/scripts/install.sh | CHARTER_UPDATE_ONLY=1 bash
 
 unlock-keychain:
 	security unlock-keychain ~/Library/Keychains/login.keychain-db
