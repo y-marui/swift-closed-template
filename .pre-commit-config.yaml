@@ -108,6 +108,21 @@ repos:
         always_run: true
 
   # ----------------------------------------------------------------
+  # Block commits on the default branch
+  # (server-side Ruleset only stops direct pushes; this catches local
+  # commits onto main/master before that point — see CI_POLICY.md
+  # Branch Protection (Ruleset))
+  # ----------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: check-not-on-default-branch
+        name: Block commits on the default branch
+        language: script
+        entry: scripts/check-not-on-default-branch.sh
+        pass_filenames: false
+        always_run: true
+
+  # ----------------------------------------------------------------
   # Charter CI template check
   # (blocks if .github/workflows/dev-charter-check.yml drifted from the
   # template documented in the installed dev-charter's README-jp.md)

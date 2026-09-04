@@ -231,20 +231,20 @@ func test_onAppear_loadsItems() async {
 
 ## Development Principles
 
-### Development Philosophy
+### Development Philosophy (`docs/dev-charter/topics/SOFTWARE_DESIGN_PRINCIPLES.md`)
 - まず小さなツールを構築する
 - ローカルファーストのデザインを優先する
 - インフラストラクチャを最小限に保つ
 
-### Design
+### Design (`docs/dev-charter/topics/SOFTWARE_DESIGN_PRINCIPLES.md`)
 - 高速なインタラクション
 - 最小限のUI
 
-### Architecture
+### Architecture (`docs/dev-charter/topics/SOFTWARE_DESIGN_PRINCIPLES.md`)
 - 最小限の依存関係
 - オフライン機能を優先
 
-### Code Design Principles
+### Code Design Principles (`docs/dev-charter/PRINCIPLES.md`)
 - **変更範囲は必要最小限**（Over-engineering しない）
 - **YAGNI 原則**: 今必要ない機能は実装しない
 - **DRY の判断**: 2 回の重複では抽象化しない、3 回目で検討
@@ -306,7 +306,8 @@ func test_onAppear_loadsItems() async {
 
 | 原則 | 参照先 |
 |---|---|
-| 設計哲学（YAGNI・DRY・依存最小化・ローカルファースト・オフライン） | `PRINCIPLES.md` |
+| 変更設計原則（変更範囲最小化・YAGNI・DRY・TODO を残さない等） | `PRINCIPLES.md` |
+| ソフトウェア設計哲学（ローカルファースト・依存最小化・オフライン優先等） | `topics/SOFTWARE_DESIGN_PRINCIPLES.md` |
 | コードコメント・スタイルガイド | `CODE_STYLE.md` |
 | シークレット管理・pre-commit・gitleaks | `SECURITY_POLICY.md` |
 | UI デザイン・SF Symbols・ダークモード | `UI_GUIDELINES.md` |
