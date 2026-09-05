@@ -24,3 +24,10 @@ force_try: warning
 identifier_name:
   min_length: 2
   max_length: 60
+
+attributes:
+  always_on_same_line:
+    - "@Environment"
+    - "@AppStorage"
+    - "@SceneStorage"
+    - "@FetchRequest"
