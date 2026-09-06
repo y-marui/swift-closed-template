@@ -308,6 +308,7 @@ func test_onAppear_loadsItems() async {
 |---|---|
 | 変更設計原則（変更範囲最小化・YAGNI・DRY・TODO を残さない等） | `PRINCIPLES.md` |
 | ソフトウェア設計哲学（ローカルファースト・依存最小化・オフライン優先等） | `topics/SOFTWARE_DESIGN_PRINCIPLES.md` |
+| Swift/Xcode 開発環境（XcodeGen・SwiftLint・SwiftFormat・`swift test`・CI 構成等の一般方針） | `topics/swift/SWIFT_DEV_ENV.md` |
 | コードコメント・スタイルガイド | `CODE_STYLE.md` |
 | シークレット管理・pre-commit・gitleaks | `SECURITY_POLICY.md` |
 | UI デザイン・SF Symbols・ダークモード | `UI_GUIDELINES.md` |
