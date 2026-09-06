@@ -210,10 +210,10 @@ SwiftData / URLSession など Apple 純正 framework のみを使用していま
 
 ## Changing SwiftLint Rules
 
-`.swiftlint.yml` を変更する際のルール：
+`.swiftlint.yml` を変更する際の一般方針は
+[`docs/dev-charter/topics/swift/SWIFT_DEV_ENV.md`](docs/dev-charter/topics/swift/SWIFT_DEV_ENV.md)
+の「Changing SwiftLint Rules」を参照。このプロジェクト固有のルールは以下のとおり：
 
-- ルールを **無効化** する場合 → PR に理由を必ず記載する
-- ルールを **追加** する場合 → 全ファイルに違反がないことを確認してからマージ
 - `force_unwrapping` は原則 warning のまま維持する（`!` は使わない）
 
 ---
