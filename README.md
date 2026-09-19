@@ -184,13 +184,12 @@ Replace `{{FeatureName}}` with your actual feature name.
 ### Release Flow
 
 ```
-feature/xxx → develop → main → tag
+feature/xxx → main → tag
 ```
 
 1. Develop on a `feature/xxx` branch
-2. Open a PR to `develop` (ensure CI passes)
-3. PR from `develop` → `main` before release
-4. Tag after merging to `main`
+2. Open a PR to `main` (ensure CI passes)
+3. Tag after merging to `main`
 
 ```bash
 git tag -a v1.0.0 -m "Release v1.0.0"
@@ -205,9 +204,8 @@ git checkout -b hotfix/issue-description
 # fix and test
 make test
 git checkout main && git merge hotfix/issue-description
-git checkout develop && git merge hotfix/issue-description
 git tag -a v1.0.1 -m "Hotfix v1.0.1"
-git push origin main develop v1.0.1
+git push origin main v1.0.1
 ```
 
 ### CI Failures

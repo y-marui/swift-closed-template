@@ -137,7 +137,7 @@ feature/xxx → step0N-xxx → main → タグ付け
 Step ブランチを使わない場合:
 
 ```
-feature/xxx → develop → main → タグ付け
+feature/xxx → main → タグ付け
 ```
 
 コミットは Conventional Commits 形式：
