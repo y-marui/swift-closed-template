@@ -184,13 +184,12 @@ cp templates/feature/UseCase.swift.template   Packages/Core/Sources/Core/Feature
 ### Release Flow
 
 ```
-feature/xxx → develop → main → タグ付け
+feature/xxx → main → タグ付け
 ```
 
 1. `feature/xxx` ブランチで開発
-2. `develop` へ PR を出す（CI が通ることを確認）
-3. リリース前に `develop` → `main` へ PR
-4. `main` マージ後にタグを打つ
+2. `main` へ PR を出す（CI が通ることを確認）
+3. `main` マージ後にタグを打つ
 
 ```bash
 git tag -a v1.0.0 -m "Release v1.0.0"
@@ -205,9 +204,8 @@ git checkout -b hotfix/issue-description
 # 修正・テスト
 make test
 git checkout main && git merge hotfix/issue-description
-git checkout develop && git merge hotfix/issue-description
 git tag -a v1.0.1 -m "Hotfix v1.0.1"
-git push origin main develop v1.0.1
+git push origin main v1.0.1
 ```
 
 ### CI Failures
