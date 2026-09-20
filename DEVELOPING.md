@@ -308,19 +308,22 @@ Xcode が自動生成する `[AppName]Tests`・`[AppName]UITests` はユニッ�
 macOS App と iOS App の**両方**に埋め込む場合、Bundle ID は以下の規則に必ず従うこと：
 
 - macOS App: `y.marui.<AppName>`
-- iOS App: `y.marui.<AppName>.iOS`（macOS と共通化しない）
-- Widget（単一ターゲットのまま SDK 条件で出し分ける）:
+- iOS App: `y.marui.<AppName>`（macOS と**同一**にする）
+- Widget（単一ターゲット。macOS・iOS 共通）:
   ```yaml
   PRODUCT_BUNDLE_IDENTIFIER: y.marui.<AppName>.Widget
-  PRODUCT_BUNDLE_IDENTIFIER[sdk=iphone*]: y.marui.<AppName>.iOS.Widget
   ```
+- その他の Extension: `y.marui.<AppName>.<ExtensionName>`（`.iOS` は挟まない）
 
-**理由**: Apple の要件により、埋め込まれる Extension の Bundle ID は親アプリの Bundle ID を
-接頭辞に持たなければならない（`Embedded binary's bundle identifier is not prefixed with the
-parent app's bundle identifier` エラー）。macOS App と iOS App の Bundle ID を共通化（Universal
-Purchase 的な構成）して回避するのではなく、Widget 側を SDK 条件付きで出し分けるのが y-marui
-プロジェクト共通の規約。`project.yml` の Widget ターゲットのコメントアウトを解除する際は、
-`PRODUCT_BUNDLE_IDENTIFIER[sdk=iphone*]` の行を削除しないこと。
+**理由**: macOS 版と iOS 版を 1 つの App Store Connect レコード（Universal Purchase）にまとめ、
+購入権限を共有するため（`MONETIZATION_POLICY.md` の Apple App Store Policy）。Universal Purchase は
+Bundle ID の同一が要件で、別 ID のままでは購入が共有されない。また Apple の要件により、埋め込まれる
+Extension の Bundle ID は親アプリの Bundle ID を接頭辞に持たなければならない（`Embedded binary's
+bundle identifier is not prefixed with the parent app's bundle identifier` エラー）が、親が同一 ID
+なので Widget を SDK 条件（`PRODUCT_BUNDLE_IDENTIFIER[sdk=iphone*]`）で出し分ける必要はない。
+
+以前の規約は「macOS と iOS の Bundle ID を分け、Widget を SDK 条件で出し分ける」だったが、
+2026-09-21 に上記へ変更した。既存アプリは各リポジトリの `AI_CONTEXT.md` の Bundle ID 記述に従う。
 
 ---
 

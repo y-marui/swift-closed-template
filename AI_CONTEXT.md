@@ -59,7 +59,7 @@ Deployment Target:  macOS XX.0 / iOS XX.0
 
 ```
 [AppName]（macOS App）    – Bundle ID: [bundle.id]
-[AppName] iOS（iOS App）  – Bundle ID: [bundle.id.ios]
+[AppName] iOS（iOS App）  – Bundle ID: [bundle.id]（macOS と同一。Universal Purchase のため）
 [AppName]Tests / [AppName]UITests
 ```
 
