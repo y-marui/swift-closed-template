@@ -1,48 +1,140 @@
 {
   "sourceLanguage": "ja",
   "strings": {
-    "settings.language.title": {
+    "common.error.title": {
       "localizations": {
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "言語"
+            "value": "エラー"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Language"
+            "value": "Error"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "语言"
+            "value": "错误"
           }
         },
         "hi": {
           "stringUnit": {
             "state": "translated",
-            "value": "भाषा"
+            "value": "त्रुटि"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Idioma"
+            "value": "Error"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Langue"
+            "value": "Erreur"
           }
         },
         "pt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Idioma"
+            "value": "Erro"
+          }
+        }
+      }
+    },
+    "common.retry": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "再試行"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重试"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "पुनः प्रयास करें"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reintentar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réessayer"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tentar novamente"
+          }
+        }
+      }
+    },
+    "example.title": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サンプル"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Example"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "示例"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "उदाहरण"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ejemplo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exemple"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exemplo"
           }
         }
       }
@@ -89,6 +181,52 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sistema"
+          }
+        }
+      }
+    },
+    "settings.language.title": {
+      "localizations": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "言語"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Language"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "语言"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "भाषा"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Langue"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma"
           }
         }
       }
