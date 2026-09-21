@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- アプリ内の言語設定の標準を追加（`AppLanguage`・App Group への保存・`Settings` シーンの言語 `Picker`・`Localizable.xcstrings` の雛形）。`Packages/Core` に `defaultLocalization: "ja"` を設定し、`AI_CONTEXT.md` の Localization と `Resources/Localization/README.md` を更新した（#41）
 - Markdown 見出し言語チェック（`scripts/check-markdown-heading-language.sh`）を pre-commit に追加し、全ドキュメントの見出しを英語に統一（#24）
 - Codex 用 `AGENTS.md` を追加（#24）
 ### Changed

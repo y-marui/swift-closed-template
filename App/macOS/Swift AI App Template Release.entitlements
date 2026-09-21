@@ -4,5 +4,9 @@
 <dict>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.y.marui.Swift-AI-App-Template</string>
+	</array>
 </dict>
 </plist>
