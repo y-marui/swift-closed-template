@@ -4,6 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "Core",
+    defaultLocalization: "ja",
     platforms: [.iOS(.v26), .macOS(.v26)],
     products: [
         .library(name: "Core", targets: ["Core"])
@@ -11,7 +12,8 @@ let package = Package(
     targets: [
         .target(
             name: "Core",
-            path: "Sources/Core"
+            path: "Sources/Core",
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "CoreTests",

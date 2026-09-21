@@ -107,6 +107,25 @@ func makeFeatureViewModel() -> FeatureViewModel {
 
 ---
 
+### 2026-09-22: In-App Language Setting
+
+**背景:** アプリ内の言語設定が 7 アプリで 4 通りに実装され、3 アプリには設定がなかった（#41）。
+
+**決定:**
+- `AppLanguage`（`system, ja, en, zh-Hans, hi, es, fr, pt`）を Domain に置く（Foundation のみに依存）
+- 保存は App Group の `UserDefaults`（Widget・Intents・Keyboard から同じ値を読むため）
+- 反映は全シーンのルートに `.environment(\.locale, ...)`（即時反映）
+- `Packages/Core` に `defaultLocalization: "ja"` とリソース（`Localizable.xcstrings`）を追加
+- `String(localized:)`・App Intents・AppleScript 向けの `AppleLanguages` 方式はテンプレートに含めない
+
+**却下した選択肢:**
+- 共通 Swift Package 化: `AppLanguage` は小さく設定画面と密に結びつくため、まずテンプレートで形を示す
+- 中国語のコードを `zh` にする: 共通パッケージ `swift-app-monetization` の文言に合わせて `zh-Hans` にした
+
+**影響範囲:** `Packages/Core`（Domain・Features/Settings・Resources）、`App/macOS`、entitlements
+
+---
+
 ### 2026-01-01: Initial Template Design
 
 **背景:** iOS 17+ を最低ターゲットとした新規プロジェクト向けのテンプレートが必要だった。

@@ -101,7 +101,13 @@ Makefile コマンド: `make bootstrap` / `make lint` / `make format` / `make bu
 
 ### Localization
 
-実装時に決定。優先順位：ユーザー設定 → システム言語 → 英語
+アプリ内の言語設定を標準実装済み。優先順位：ユーザー設定 → システム言語 → 英語
+
+- `AppLanguage`（`system, ja, en, zh-Hans, hi, es, fr, pt`）は `Packages/Core` の Domain に置く（Foundation のみに依存）
+- 保存は App Group の `UserDefaults` の `appLanguage`。不明な値は `system` として扱う
+- 反映は全シーンのルートに `.environment(\.locale, language.resolvedLocale)`（即時反映）
+- 設定画面の「言語」セクションは `SettingsView`（`Picker`）
+- `String(localized:)`・App Intents・AppleScript が必要なときの手順など、詳細は `Resources/Localization/README.md` を参照
 
 ### Monetization
 
