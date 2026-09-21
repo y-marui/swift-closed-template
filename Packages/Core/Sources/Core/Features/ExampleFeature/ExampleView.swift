@@ -26,21 +26,27 @@ public struct ExampleView: View {
                 }
 
             case .error(let message):
-                ContentUnavailableView(
-                    String(localized: "common.error.title"),
-                    systemImage: "exclamationmark.triangle",
-                    description: Text(message)
-                )
+                ContentUnavailableView {
+                    Label {
+                        Text("common.error.title", bundle: .module)
+                    } icon: {
+                        Image(systemName: "exclamationmark.triangle")
+                    }
+                } description: {
+                    Text(message)
+                }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
-                        Button(String(localized: "common.retry")) {
+                        Button {
                             Task { await viewModel.refresh() }
+                        } label: {
+                            Text("common.retry", bundle: .module)
                         }
                     }
                 }
             }
         }
-        .navigationTitle(String(localized: "example.title"))
+        .navigationTitle(Text("example.title", bundle: .module))
         .task {
             await viewModel.onAppear()
         }
