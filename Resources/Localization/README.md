@@ -60,14 +60,17 @@ Extension は App Group から `appLanguage` を読む。Widget は Provider が
 ## Setup Steps (Xcode)
 
 1. プロジェクト設定 > Info > Localizations に上記言語をすべて追加する
-2. `String(localized:)` または `LocalizedStringKey` を使って文字列を定義する
-3. このディレクトリに `Localizable.xcstrings`（String Catalog）を作成する
+2. `Text(_, bundle: .module)` など `LocalizedStringKey` で文字列を定義する（SwiftUI 以外は下の「Non-SwiftUI strings」を参照）
+3. `Packages/Core/Sources/Core/Resources/Localizable.xcstrings`（String Catalog）にキーを追加する
 
 ## How to Use Strings
 
 ```swift
 // ✅ 推奨: String Catalog (Xcode 15+)
-Text("feature.title")
+Text("feature.title", bundle: .module)
+Button { ... } label: { Text("common.retry", bundle: .module) }
+
+// ❌ SwiftUI では避ける: 環境の locale（アプリ内の言語設定）が反映されない
 Button(String(localized: "common.retry")) { ... }
 
 // ❌ 禁止: ハードコードされた文字列
