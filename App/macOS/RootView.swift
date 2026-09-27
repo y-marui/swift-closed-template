@@ -18,5 +18,6 @@ struct RootView: View {
         NavigationStack {
             ExampleView(viewModel: exampleViewModel)
         }
+        .frame(minWidth: 600, minHeight: 400)
     }
 }
