@@ -16,6 +16,7 @@ struct ExampleApp: App {
             )
             .environment(\.locale, language.resolvedLocale)
         }
+        .defaultSize(width: 800, height: 600)
 
         Settings {
             SettingsView(store: AppGroup.userDefaults)
