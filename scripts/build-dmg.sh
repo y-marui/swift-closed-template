@@ -1,13 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-XCODE_PROJECT=$(find . -maxdepth 1 -name "*.xcodeproj" -print -quit)
-if [[ -z "${XCODE_PROJECT}" ]]; then
-    echo "Error: No .xcodeproj found in the current directory." >&2
+if [[ ! -f "project.yml" ]]; then
+    echo "Error: project.yml not found in the current directory." >&2
     exit 1
 fi
-XCODE_PROJECT="${XCODE_PROJECT#./}"
-APP_NAME="${XCODE_PROJECT%.xcodeproj}"
+APP_NAME=$(grep -m1 '^name:' project.yml | sed 's/^name:[[:space:]]*//')
+if [[ -z "${APP_NAME}" ]]; then
+    echo "Error: could not read 'name:' from project.yml." >&2
+    exit 1
+fi
+XCODE_PROJECT="${APP_NAME}.xcodeproj"
+if [[ ! -d "${XCODE_PROJECT}" ]]; then
+    echo "Error: ${XCODE_PROJECT} not found (stale/mismatched .xcodeproj?). Run 'xcodegen generate' first." >&2
+    exit 1
+fi
 SCHEME="${APP_NAME}"
 
 BUILD_DIR="build-dmg"
