@@ -360,7 +360,7 @@ AIが守るべき手動ルールのみ記載する。
 - **コミット粒度**: 機能単位・動作確認 OK 後
 - **コミットメッセージ**: Conventional Commits 形式（`feat` / `fix` / `refactor` / `docs`）
 - **WIP 禁止**: 動作しないコードはコミットしない
-- **`main` へのコミット**: 他の開発者がレビューする。個人開発では実装担当と異なる AI によるレビューとオーナーの最終確認で代替できる（`docs/dev-charter/SECURITY_POLICY.md` の Code Review 参照）
+- **`main` への直接コミット禁止**: このテンプレートおよびここから生成した swift-* 系アプリはすべて、個人開発であっても必ずブランチ + Pull Request 経由で `main` に取り込む（`git commit` を `main` 上で直接行わない）。レビューは実装担当と異なる AI によるレビューとオーナーの最終確認で代替できる（`docs/dev-charter/SECURITY_POLICY.md` の Code Review 参照）が、それでも PR は必須
 
 ---
 
