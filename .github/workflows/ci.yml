@@ -85,7 +85,8 @@ jobs:
     if: needs.changes.outputs.code == 'true'
     # Set the repository variable MACOS_RUNNER (e.g. to a self-hosted runner
     # label) in PRIVATE repositories only; never on a public repository.
-    runs-on: ${{ vars.MACOS_RUNNER || 'macos-latest' }}
+    # Fork PRs always stay on the GitHub-hosted runner.
+    runs-on: ${{ vars.MACOS_RUNNER && !github.event.pull_request.head.repo.fork && vars.MACOS_RUNNER || 'macos-latest' }}
     env:
       SCHEME: Swift AI App Template
     steps:
