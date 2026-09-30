@@ -76,7 +76,7 @@ jobs:
       - name: Run SwiftLint
         run: |
           docker run --rm -v "$PWD":/work -w /work \
-            ghcr.io/realm/swiftlint:latest swiftlint --strict
+            ghcr.io/realm/swiftlint:latest --strict
 
   build:
     name: Build & Test
