@@ -42,3 +42,4 @@ if ! DIFF=$(diff -u <(printf '%s\n' "$TEMPLATE") <(sed 's/\r$//' "$WORKFLOW_FILE
 fi
 
 exit 0
+# filter test
