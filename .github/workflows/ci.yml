@@ -42,6 +42,11 @@ jobs:
               - '!.github/copilot-instructions.md'
               - '!.github/workflows/dev-charter-check.yml'
               - '!.github/workflows/auto-assign-self.yml'
+              # Files distributed by dev-charter (git subtree update PRs).
+              - '!.pre-commit-config.yaml'
+              - '!scripts/check-*'
+              - '!scripts/install.*'
+              - '!scripts/PSScriptAnalyzerSettings.psd1'
 
   security:
     name: Security scan (pre-commit)
@@ -63,21 +68,26 @@ jobs:
     name: Lint
     needs: changes
     if: needs.changes.outputs.code == 'true'
-    runs-on: macos-latest
+    # SwiftLint runs on Linux (x1 billing) instead of macOS (x10).
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install SwiftLint
-        run: brew install swiftlint
-
       - name: Run SwiftLint
-        run: swiftlint --strict
+        run: |
+          docker run --rm -v "$PWD":/work -w /work \
+            ghcr.io/realm/swiftlint:latest swiftlint --strict
 
-  test:
-    name: Test
-    needs: changes
+  build:
+    name: Build & Test
+    # Start the macOS job (x10 billing) only after the cheap checks pass.
+    needs: [changes, security, lint]
     if: needs.changes.outputs.code == 'true'
-    runs-on: macos-latest
+    # Set the repository variable MACOS_RUNNER (e.g. to a self-hosted runner
+    # label) in PRIVATE repositories only; never on a public repository.
+    runs-on: ${{ vars.MACOS_RUNNER || 'macos-latest' }}
+    env:
+      SCHEME: Swift AI App Template
     steps:
       - uses: actions/checkout@v7
 
@@ -88,16 +98,6 @@ jobs:
       - name: Run Core unit tests
         run: swift test
         working-directory: Packages/Core
-
-  build:
-    name: Build
-    needs: [changes, security, lint, test]
-    if: needs.changes.outputs.code == 'true'
-    runs-on: macos-latest
-    env:
-      SCHEME: Swift AI App Template
-    steps:
-      - uses: actions/checkout@v7
 
       - name: Install XcodeGen
         run: brew install xcodegen
@@ -120,7 +120,7 @@ jobs:
 
   gate:
     name: CI
-    needs: [changes, security, lint, test, build]
+    needs: [changes, security, lint, build]
     if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
     steps:
@@ -134,7 +134,7 @@ jobs:
             echo "docs/config-only change; nothing further to verify"
             exit 0
           fi
-          for result in "${{ needs.lint.result }}" "${{ needs.test.result }}" "${{ needs.build.result }}"; do
+          for result in "${{ needs.lint.result }}" "${{ needs.build.result }}"; do
             if [ "$result" != "success" ]; then
               echo "::error::a required job did not succeed (got: $result)"
               exit 1
