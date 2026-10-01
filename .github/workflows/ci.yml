@@ -100,7 +100,7 @@ jobs:
         working-directory: Packages/Core
 
       - name: Install XcodeGen
-        run: brew install xcodegen
+        run: command -v xcodegen >/dev/null || brew install xcodegen
 
       - name: Generate Xcode project
         run: xcodegen generate
