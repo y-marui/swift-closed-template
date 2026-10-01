@@ -28,6 +28,22 @@ public enum AppLanguage: String, CaseIterable, Identifiable, Sendable {
         resolvedLocale(preferredLanguages: Locale.preferredLanguages)
     }
 
+    /// `String(localized:)` は環境の `locale` に従わないため、ビュー外の文言は選択言語の lproj から直接引く。
+    /// 選択言語の lproj が見つからないときは、`bundle` の既定の解決（システム言語）に戻す。
+    /// Core のカタログを引くときは `Bundle.module`、アプリ target のカタログなら `.main` を渡す。
+    public func localizedString(
+        _ key: String,
+        bundle: Bundle = .main,
+        preferredLanguages: [String] = Locale.preferredLanguages
+    ) -> String {
+        let identifier = resolvedLocale(preferredLanguages: preferredLanguages).identifier
+        guard
+            let path = bundle.path(forResource: identifier, ofType: "lproj"),
+            let languageBundle = Bundle(path: path)
+        else { return bundle.localizedString(forKey: key, value: nil, table: nil) }
+        return languageBundle.localizedString(forKey: key, value: nil, table: nil)
+    }
+
     /// 保存値を復元する。未知の値は `system` として扱う。
     public init(storedValue: String) {
         self = AppLanguage(rawValue: storedValue) ?? .system

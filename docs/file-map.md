@@ -36,6 +36,7 @@
 |---|---|---|
 | `Packages/Core/Sources/Core/Domain/Models/AppLanguage.swift` | 言語の型・`resolvedLocale` | Foundation |
 | `Packages/Core/Sources/Core/Features/Settings/SettingsView.swift` | 「言語」セクションの `Picker` | `AppLanguage.swift`、`Resources/Localizable.xcstrings` |
+| `Packages/Core/Sources/Core/Shared/LocalizedViews.swift` | `bundle:` を取る `Button`・`Label`・`Picker` 等のイニシャライザ | — |
 | `Packages/Core/Sources/Core/Resources/Localizable.xcstrings` | 文言カタログ（7 言語） | — |
 | `App/macOS/App.swift` | `Settings` シーンと `.environment(\.locale, ...)` | `AppLanguage.swift`、`SettingsView.swift`、`AppGroup.swift` |
 

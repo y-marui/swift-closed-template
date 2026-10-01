@@ -44,7 +44,12 @@ Extension は App Group から `appLanguage` を読む。Widget は Provider が
 ### Non-SwiftUI strings
 
 `String(localized:)`・App Intents・AppleScript の文言は、環境の `locale` では変わらない。
-これらが必要になったアプリだけ、起動時に `AppleLanguages`（`UserDefaults.standard`）へ選択言語を書き込む
+
+ビューの外の文言（パネルのタイトル、エラー文言、Widget のプレースホルダなど）は、選択言語の lproj を直接引く
+`AppLanguage.localizedString(_:bundle:)` を使う（即時に反映される）。Core のカタログなら `Bundle.module`、
+アプリ target のカタログなら `.main` を渡す。選択言語の lproj が見つからないときは、システム言語の解決に戻る。
+
+App Intents・AppleScript など、環境の `locale` も lproj の直接参照も届かない箇所が必要になったアプリだけ、起動時に `AppleLanguages`（`UserDefaults.standard`）へ選択言語を書き込む
 `AppLanguageOverride` を用意する（Glance Task の実装が参考）。反映はアプリの再起動後になるため、設定画面に
 「再起動後に反映される」旨を出す。テンプレートには含めない（YAGNI）。
 
@@ -68,7 +73,8 @@ Extension は App Group から `appLanguage` を読む。Widget は Provider が
 ```swift
 // ✅ 推奨: String Catalog (Xcode 15+)
 Text("feature.title", bundle: .module)
-Button { ... } label: { Text("common.retry", bundle: .module) }
+Button("common.retry", bundle: .module) { ... }   // Shared/LocalizedViews.swift の拡張
+Label("common.error.title", bundle: .module, systemImage: "exclamationmark.triangle")
 
 // ❌ SwiftUI では避ける: 環境の locale（アプリ内の言語設定）が反映されない
 Button(String(localized: "common.retry")) { ... }
@@ -77,6 +83,14 @@ Button(String(localized: "common.retry")) { ... }
 Text("タイトル")
 Button("Retry") { ... }
 ```
+
+### Localized Initializers
+
+`Button(_:)`・`Label(_:systemImage:)`・`Section(_:)` などの標準イニシャライザは `bundle:` を取れない。
+`Packages/Core/Sources/Core/Shared/LocalizedViews.swift` に、`Text(_, bundle:)` に委譲する `bundle:` つきの
+イニシャライザ（`Button`・`Label`・`Section`・`Picker`・`Toggle`・`TextField`・`ProgressView`）を用意している。
+`alert`・`confirmationDialog`・`navigationTitle` には `Text("key", bundle: .module)` を渡す。
+文言を返すプロパティは `String` ではなく `LocalizedStringKey` を返す型にする（`String` だとキーが表示される）。
 
 ## Key Naming Convention
 

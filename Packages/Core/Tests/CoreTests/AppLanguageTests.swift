@@ -70,4 +70,15 @@ final class AppLanguageTests: XCTestCase {
         // Then
         XCTAssertEqual(sut, .zhHans)
     }
+
+    func test_localizedString_missingLproj_fallsBackToKey() {
+        // Given: テストバンドルに言語の lproj も該当キーもない
+        let sut = AppLanguage.ja
+
+        // When
+        let result = sut.localizedString("missing.key", bundle: Bundle(for: Self.self))
+
+        // Then
+        XCTAssertEqual(result, "missing.key")
+    }
 }
