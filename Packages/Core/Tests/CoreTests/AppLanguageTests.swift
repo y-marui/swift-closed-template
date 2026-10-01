@@ -71,14 +71,52 @@ final class AppLanguageTests: XCTestCase {
         XCTAssertEqual(sut, .zhHans)
     }
 
-    func test_localizedString_missingLproj_fallsBackToKey() {
-        // Given: テストバンドルに言語の lproj も該当キーもない
-        let sut = AppLanguage.ja
+    // MARK: - localizedString
+
+    private func makeFixtureBundle() throws -> (Bundle, URL) {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("AppLanguageTests-\(UUID().uuidString).bundle")
+        for (name, value) in [("ja", "こんにちは"), ("pt", "Olá")] {
+            let dir = url.appendingPathComponent("\(name).lproj")
+            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+            try "\"greeting\" = \"\(value)\";\n".write(
+                to: dir.appendingPathComponent("Localizable.strings"), atomically: true, encoding: .utf8)
+        }
+        return (try XCTUnwrap(Bundle(url: url)), url)
+    }
+
+    func test_localizedString_explicitLanguage_returnsThatLanguage() throws {
+        // Given
+        let (bundle, url) = try makeFixtureBundle()
+        defer { try? FileManager.default.removeItem(at: url) }
+
+        // When / Then
+        XCTAssertEqual(AppLanguage.ja.localizedString("greeting", bundle: bundle), "こんにちは")
+        XCTAssertEqual(AppLanguage.pt.localizedString("greeting", bundle: bundle), "Olá")
+    }
+
+    func test_localizedString_system_usesFirstSupportedPreferredLanguage() throws {
+        // Given
+        let (bundle, url) = try makeFixtureBundle()
+        defer { try? FileManager.default.removeItem(at: url) }
 
         // When
-        let result = sut.localizedString("missing.key", bundle: Bundle(for: Self.self))
+        let result = AppLanguage.system.localizedString(
+            "greeting", bundle: bundle, preferredLanguages: ["xx", "pt-BR"])
 
         // Then
-        XCTAssertEqual(result, "missing.key")
+        XCTAssertEqual(result, "Olá")
+    }
+
+    func test_localizedString_missingLproj_fallsBackToKey() throws {
+        // Given: `fr` の lproj がない
+        let (bundle, url) = try makeFixtureBundle()
+        defer { try? FileManager.default.removeItem(at: url) }
+
+        // When
+        let result = AppLanguage.fr.localizedString("missing", bundle: bundle)
+
+        // Then
+        XCTAssertEqual(result, "missing")
     }
 }
