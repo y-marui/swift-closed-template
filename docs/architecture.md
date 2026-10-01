@@ -124,6 +124,17 @@ func makeFeatureViewModel() -> FeatureViewModel {
 
 **影響範囲:** `Packages/Core`（Domain・Features/Settings・Resources）、`App/macOS`、entitlements
 
+### 2026-10-01: Localized Initializers and Out-of-View Lookup
+
+**背景:** 7 アプリへ展開した結果、`String(localized:)` を `Button`・`Label` などに渡している箇所が言語設定に従わない問題が多く見つかった。標準のイニシャライザは `bundle:` を取れないため、Core のカタログを引くには `Text(_, bundle:)` を使う書き換えが必要だった。
+
+**決定:**
+- `bundle:` を取るイニシャライザを `Shared/LocalizedViews.swift` に用意する
+- ビュー外の文言用に `AppLanguage.localizedString(_:bundle:)` を追加する（選択言語の lproj を直接引く）
+- `AppleLanguages` 方式はテンプレートに含めない（App Intents・AppleScript が必要なアプリだけ）
+
+**影響範囲:** `Packages/Core`（Shared・Domain・Features）、`templates/feature`
+
 ---
 
 ### 2026-01-01: Initial Template Design

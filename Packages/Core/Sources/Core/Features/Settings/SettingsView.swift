@@ -11,12 +11,10 @@ public struct SettingsView: View {
     public var body: some View {
         Form {
             Section {
-                Picker(selection: $language) {
+                Picker("settings.language.title", bundle: .module, selection: $language) {
                     ForEach(AppLanguage.allCases) { option in
                         label(for: option).tag(option)
                     }
-                } label: {
-                    Text("settings.language.title", bundle: .module)
                 }
             }
         }

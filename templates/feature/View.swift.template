@@ -27,20 +27,14 @@ struct {{FeatureName}}View: View {
 
             case .error(let message):
                 ContentUnavailableView {
-                    Label {
-                        Text("common.error.title", bundle: .module)
-                    } icon: {
-                        Image(systemName: "exclamationmark.triangle")
-                    }
+                    Label("common.error.title", bundle: .module, systemImage: "exclamationmark.triangle")
                 } description: {
                     Text(message)
                 }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction) {
-                        Button {
+                        Button("common.retry", bundle: .module) {
                             Task { await viewModel.refresh() }
-                        } label: {
-                            Text("common.retry", bundle: .module)
                         }
                     }
                 }
