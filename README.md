@@ -17,7 +17,7 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 
 - **App Name:** <!-- TODO: e.g. MyApp -->
 - **Bundle ID:** <!-- TODO: e.g. com.yourcompany.myapp -->
-- **Target:** iOS 17+ / macOS 14+
+- **Target:** macOS 26+ (iOS 26+ optional; see [Enabling the iOS Target](Resources/Localization/README.md#enabling-the-ios-target))
 - **Team Size:** <!-- TODO: e.g. Solo / 2–3 people -->
 
 ### Feature List
@@ -38,9 +38,9 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 
 | Concern | Solution |
 |---|---|
-| State management | `@Observable` (Swift 5.9+) |
-| Persistence | SwiftData <!-- TODO: remove if not needed --> |
-| Networking | URLSession + async/await <!-- TODO: remove if not needed --> |
+| Language | Swift 6 (strict concurrency) |
+| State management | `@Observable` |
+| Networking | URLSession + async/await (sample `APIClient`) <!-- TODO: remove if not needed --> |
 | Dependency Injection | Manual (AppDependency) |
 | Testing | XCTest + mocks |
 
@@ -63,19 +63,21 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 ## Use this template
 
 1. Click **"Use this template"** → **"Create a new repository"** on GitHub.
-2. Clone your new repository and `cd` into it.
-3. Run `make bootstrap` to install tools and resolve packages.
-4. Open Xcode, create a new iOS App project in the repository root, then add `Packages/Core` as a local package.
+2. Apply the GitHub repository settings first (creating a repository from a template resets them). See [`docs/dev-charter/topics/GITHUB_SETTINGS.md`](docs/dev-charter/topics/GITHUB_SETTINGS.md) and [`docs/dev-charter/INSTALL_CHECKLIST.md`](docs/dev-charter/INSTALL_CHECKLIST.md).
+3. Clone your new repository and `cd` into it.
+4. Run `make bootstrap` to install tools, generate the Xcode project with xcodegen, and resolve packages.
 5. Replace all `Example` references with your feature name (see [AI_CONTEXT.md](AI_CONTEXT.md)).
 6. Update the **Project Overview** section above with your app's details.
 
 ### Setup Checklist
 
+- [ ] Apply the GitHub repository settings (`main-protection` Ruleset, auto-delete head branches, auto-merge, Dependabot alerts, Sponsorships) per [`GITHUB_SETTINGS.md`](docs/dev-charter/topics/GITHUB_SETTINGS.md); follow [`INSTALL_CHECKLIST.md`](docs/dev-charter/INSTALL_CHECKLIST.md) for the full procedure
+- [ ] Rename `README_TEMPLATE.md` / `README_TEMPLATE-jp.md` to `README.md` / `README-jp.md` (replacing the existing ones)
 - [ ] Fill in all `<!-- TODO -->` placeholders in the Project Overview section
-- [ ] Update the CI badge URLs to your actual repository URL
+- [ ] Update the CI and Charter Check badge URLs to your actual repository URL
+- [ ] Replace `[USERNAME]` / `[BMC_USERNAME]` in the support badges and `.github/FUNDING.yml` (see `~/.identity/accounts.yaml`)
 - [ ] Rename `ExampleApp` in `App/macOS/App.swift` to your project name
-- [ ] Create an Xcode project and add `Packages/Core` as a local package
-- [ ] Run `make bootstrap` to install tools (pre-commit hooks are installed automatically)
+- [ ] Run `make bootstrap` to install tools and generate the Xcode project (pre-commit hooks are installed automatically)
 - [ ] Confirm `make test` passes
 - [ ] Confirm CI works in GitHub Actions (security / lint / test jobs)
 - [ ] If the new repository is **private**, set the `MACOS_RUNNER` repository variable to use the self-hosted macOS runner: `gh variable set MACOS_RUNNER --body macos-sh -R <owner>/<repo>` (if unset, CI runs on `macos-latest` at ~10x billing). Never set it on a public repository
@@ -85,10 +87,11 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 ## Features
 
 - ✅ Clean Architecture (Feature / Domain / Infrastructure)
-- ✅ `@Observable` ViewModels (iOS 17+)
+- ✅ Swift 6 with strict concurrency, `@Observable` ViewModels
 - ✅ Manual dependency injection via `AppDependency`
-- ✅ SwiftData persistence layer
-- ✅ Async/await networking with `URLSession`
+- ✅ Async/await networking sample with `URLSession`
+- ✅ Xcode project generation with xcodegen
+- ✅ In-app language setting (8 languages)
 - ✅ XCTest with mock examples
 - ✅ SwiftLint + SwiftFormat configured
 - ✅ GitHub Actions CI (lint + test)
@@ -96,20 +99,19 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 
 ## Requirements
 
-- Xcode 15+
-- iOS 17+ / macOS 14+
-- Swift 5.9+
+- Xcode 26+
+- macOS 26+ (iOS 26+ optional)
+- Swift 6
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/y-marui/swift-app-template.git
-cd swift-app-template
+git clone https://github.com/y-marui/swift-closed-template.git
+cd swift-closed-template
 make bootstrap
 ```
 
-Then create a new iOS App project in Xcode and add `Packages/Core` as a local package.
-See comments in `Package.swift` for details.
+`make bootstrap` generates the Xcode project from `project.yml` with xcodegen.
 
 ## Commands
 
@@ -119,14 +121,14 @@ See comments in `Package.swift` for details.
 | `make lint` | Run SwiftLint |
 | `make format` | Run SwiftFormat |
 | `make test` | Run all tests |
-| `make build` | Build via Xcode (if `.xcodeproj` exists) or `swift build` |
+| `make build` | Generate the project with xcodegen and build via Xcode |
 | `make clean` | Clean build artifacts (`build/`, `.build/`) |
 
-`make build` auto-detects the `.xcodeproj` and builds for iOS Simulator (iPhone 16) into `build/`.
+`make build` generates the project with xcodegen and builds the macOS app into `build/`.
 Override defaults as needed:
 
 ```bash
-DESTINATION="platform=iOS Simulator,name=iPhone 15" make build
+DESTINATION="platform=macOS,arch=arm64" make build
 SCHEME=MyApp make build
 ```
 
@@ -160,15 +162,14 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for development workflow, naming conven
 
 ## Runbook
 
-### Xcode Project Setup (New)
+### Xcode Project Setup
 
-1. Xcode > File > New > Project — create an iOS App
-2. Set project name / Bundle ID and save in the repository root
-3. Xcode > File > Add Package Dependencies
-4. Select `Packages/Core` via "Add Local..."
-5. Add the `Core` library to the App target
-6. Add files in `App/macOS/` (and `App/iOS/`, `App/Widget/` if applicable) to the project
-7. Confirm `make test` passes
+The Xcode project is generated from `project.yml` with xcodegen; do not create it by hand.
+
+1. Edit the target name, `PRODUCT_BUNDLE_IDENTIFIER`, etc. in `project.yml` (and `APP_NAME` in the `Makefile`)
+2. Run `make bootstrap` to generate the project
+3. To add an iOS target, uncomment the iOS entries in `project.yml` (see [Enabling the iOS Target](Resources/Localization/README.md#enabling-the-ios-target))
+4. Confirm `make test` passes
 
 ### Adding a New Feature
 

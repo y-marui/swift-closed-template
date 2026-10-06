@@ -120,6 +120,21 @@ Apple App Store 配信。初回利用から **1 か月間の無料試用**（機
 
 ---
 
+## Initial Setup (Derived Projects)
+
+このテンプレートから作成したプロジェクトでは、次の順で初期セットアップを行う。手順の詳細は
+[`docs/dev-charter/INSTALL_CHECKLIST.md`](docs/dev-charter/INSTALL_CHECKLIST.md) と README の Setup Checklist を正とし、ここには複製しない。
+
+1. **GitHub リポジトリ設定を最優先で適用する** — テンプレートからの作成時はすべての設定（Ruleset・head ブランチ自動削除・auto-merge・Dependabot alerts・Sponsorships 等）が初期化されるため。手順は [`docs/dev-charter/topics/GITHUB_SETTINGS.md`](docs/dev-charter/topics/GITHUB_SETTINGS.md)
+2. `README_TEMPLATE-jp.md` → `README-jp.md`、`README_TEMPLATE.md` → `README.md` にリネームする（旧 `README-jp.md` / `README.md` は削除）
+3. プレースホルダを置換する
+   - CI バッジ・Charter Check バッジ（`{user}` / `{repo}` / `{workflow}`）
+   - サポートバッジと `.github/FUNDING.yml`（`[USERNAME]` / `[BMC_USERNAME]`。値は `~/.identity/accounts.yaml`）
+4. `Makefile` の `TEAM_ID` / `DEVELOPER_NAME` を設定する（署名・DMG 配布に必要。空のままだと `scripts/build-dmg.sh` が失敗する）
+5. `project.yml`・`Makefile` のアプリ名・Bundle ID を更新し、`make bootstrap` でプロジェクトを生成して `make test` を確認する
+
+---
+
 ## Architecture Rules (Strictly Enforced)
 
 - **Feature → Domain**: ✅ Allowed
