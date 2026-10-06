@@ -17,7 +17,7 @@
 
 - **アプリ名:** <!-- TODO: 例: MyApp -->
 - **Bundle ID:** <!-- TODO: 例: com.yourcompany.myapp -->
-- **ターゲット:** iOS 17+ / macOS 14+
+- **ターゲット:** macOS 26+（iOS 26+ は任意。[iOS ターゲットの有効化](Resources/Localization/README.md#enabling-the-ios-target)参照）
 - **チーム規模:** <!-- TODO: 例: 個人 / 2〜3人 -->
 
 ### Feature List
@@ -38,9 +38,9 @@
 
 | Concern | Solution |
 |---|---|
-| State management | `@Observable` (Swift 5.9+) |
-| Persistence | SwiftData <!-- TODO: 不要なら削除 --> |
-| Networking | URLSession + async/await <!-- TODO: 不要なら削除 --> |
+| Language | Swift 6（strict concurrency） |
+| State management | `@Observable` |
+| Networking | URLSession + async/await（サンプルの `APIClient`） <!-- TODO: 不要なら削除 --> |
 | Dependency Injection | Manual (AppDependency) |
 | Testing | XCTest + mocks |
 
@@ -63,19 +63,21 @@
 ## Use this template
 
 1. GitHub で **"Use this template"** → **"Create a new repository"** をクリック
-2. リポジトリをクローンして `cd` で移動
-3. `make bootstrap` でツールをインストールしてパッケージを解決
-4. Xcode でリポジトリルートに新規 iOS App プロジェクトを作成し、`Packages/Core` をローカルパッケージとして追加
+2. GitHub リポジトリ設定を最初に適用する（テンプレートからの作成時は設定が初期化されるため）。[`docs/dev-charter/topics/GITHUB_SETTINGS.md`](docs/dev-charter/topics/GITHUB_SETTINGS.md) と [`docs/dev-charter/INSTALL_CHECKLIST.md`](docs/dev-charter/INSTALL_CHECKLIST.md) を参照
+3. リポジトリをクローンして `cd` で移動
+4. `make bootstrap` でツールをインストールし、xcodegen で Xcode プロジェクトを生成してパッケージを解決
 5. すべての `Example` をフィーチャー名に置き換える（[AI_CONTEXT.md](AI_CONTEXT.md) 参照）
 6. 上記「プロジェクト概要」セクションをアプリの情報で更新する
 
 ### Setup Checklist
 
+- [ ] GitHub リポジトリ設定（`main-protection` Ruleset、head ブランチ自動削除、auto-merge、Dependabot alerts、Sponsorships）を [`GITHUB_SETTINGS.md`](docs/dev-charter/topics/GITHUB_SETTINGS.md) に従って適用する。全体の手順は [`INSTALL_CHECKLIST.md`](docs/dev-charter/INSTALL_CHECKLIST.md) を参照
+- [ ] `README_TEMPLATE.md` / `README_TEMPLATE-jp.md` を `README.md` / `README-jp.md` にリネームする（既存ファイルは置き換える）
 - [ ] 「プロジェクト概要」セクションの `<!-- TODO -->` をすべて埋める
-- [ ] CI バッジの URL を実際のリポジトリ URL に変更する
+- [ ] CI・Charter Check バッジの URL を実際のリポジトリ URL に変更する
+- [ ] サポートバッジと `.github/FUNDING.yml` の `[USERNAME]` / `[BMC_USERNAME]` を置き換える（`~/.identity/accounts.yaml` 参照）
 - [ ] `App/macOS/App.swift` の `ExampleApp` をプロジェクト名に変更する
-- [ ] Xcode プロジェクトを作成し `Packages/Core` をローカルパッケージとして追加する
-- [ ] `make bootstrap` を実行してツールをインストールする（pre-commit hooks も自動インストールされる）
+- [ ] `make bootstrap` を実行してツールをインストールし、Xcode プロジェクトを生成する（pre-commit hooks も自動インストールされる）
 - [ ] `make test` が通ることを確認する
 - [ ] CI が GitHub Actions で動作することを確認する（security / lint / test の 3 ジョブ）
 - [ ] 新しいリポジトリが **private** なら、self-hosted macOS runner を使うためリポジトリ変数 `MACOS_RUNNER` を設定する: `gh variable set MACOS_RUNNER --body macos-sh -R <owner>/<repo>`（未設定だと `macos-latest` で動き、約 10 倍の課金になる）。public リポジトリには設定しない
@@ -85,10 +87,11 @@
 ## Features
 
 - ✅ Clean Architecture（Feature / Domain / Infrastructure）
-- ✅ `@Observable` ViewModel（iOS 17+）
+- ✅ Swift 6（strict concurrency）、`@Observable` ViewModel
 - ✅ `AppDependency` による手動依存注入
-- ✅ SwiftData 永続化レイヤー
-- ✅ `URLSession` + async/await ネットワーク
+- ✅ `URLSession` + async/await ネットワークのサンプル
+- ✅ xcodegen による Xcode プロジェクト生成
+- ✅ アプリ内言語設定（8 言語）
 - ✅ モック付き XCTest
 - ✅ SwiftLint + SwiftFormat 設定済み
 - ✅ GitHub Actions CI（lint + test）
@@ -96,20 +99,19 @@
 
 ## Requirements
 
-- Xcode 15+
-- iOS 17+ / macOS 14+
-- Swift 5.9+
+- Xcode 26+
+- macOS 26+（iOS 26+ は任意）
+- Swift 6
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/y-marui/swift-app-template.git
-cd swift-app-template
+git clone https://github.com/y-marui/swift-closed-template.git
+cd swift-closed-template
 make bootstrap
 ```
 
-その後、Xcode で新規 iOS プロジェクトを作成し、`Packages/Core` をローカルパッケージとして追加してください。
-詳細は `Package.swift` のコメントを参照。
+`make bootstrap` が xcodegen で `project.yml` から Xcode プロジェクトを生成します。
 
 ## Commands
 
@@ -119,14 +121,14 @@ make bootstrap
 | `make lint` | SwiftLint を実行 |
 | `make format` | SwiftFormat を実行 |
 | `make test` | 全テストを実行 |
-| `make build` | Xcode でビルド（`.xcodeproj` がある場合）または `swift build` |
+| `make build` | xcodegen でプロジェクトを生成し、Xcode でビルド |
 | `make clean` | ビルド成果物を削除（`build/`、`.build/`） |
 
-`make build` は `.xcodeproj` を自動検出し、iOS Simulator（iPhone 16）向けに `build/` へビルドします。
+`make build` は xcodegen でプロジェクトを生成し、macOS アプリを `build/` へビルドします。
 デフォルトは環境変数で上書き可能です：
 
 ```bash
-DESTINATION="platform=iOS Simulator,name=iPhone 15" make build
+DESTINATION="platform=macOS,arch=arm64" make build
 SCHEME=MyApp make build
 ```
 
@@ -160,15 +162,14 @@ scripts/                # シェルスクリプト
 
 ## Runbook
 
-### Xcode Project Setup (New)
+### Xcode Project Setup
 
-1. Xcode > File > New > Project で iOS App を作成
-2. プロジェクト名・Bundle ID を設定し、このリポジトリのルートに保存
-3. Xcode > File > Add Package Dependencies を開く
-4. 「Add Local...」で `Packages/Core` を選択
-5. App ターゲットに `Core` ライブラリを追加
-6. `App/macOS/` 内のファイルをプロジェクトに追加（iOS・Widget がある場合は各フォルダも追加）
-7. `make test` が通ることを確認
+Xcode プロジェクトは xcodegen が `project.yml` から生成する。手作業で作成しない。
+
+1. `project.yml` のターゲット名・`PRODUCT_BUNDLE_IDENTIFIER` 等（と `Makefile` の `APP_NAME`）を編集する
+2. `make bootstrap` でプロジェクトを生成する
+3. iOS ターゲットを追加する場合は `project.yml` の iOS 関連行のコメントを外す（[iOS ターゲットの有効化](Resources/Localization/README.md#enabling-the-ios-target)参照）
+4. `make test` が通ることを確認
 
 ### Adding a New Feature
 
