@@ -16,6 +16,7 @@ jobs:
     name: Detect changes
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ${{ vars.LINUX_RUNNER && !github.event.pull_request.head.repo.fork && vars.LINUX_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 5
     permissions:
       contents: read
       pull-requests: read
@@ -51,6 +52,7 @@ jobs:
     name: Security scan (pre-commit)
     if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
     runs-on: ${{ vars.LINUX_RUNNER && !github.event.pull_request.head.repo.fork && vars.LINUX_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
         with:
@@ -69,6 +71,7 @@ jobs:
     if: needs.changes.outputs.code == 'true'
     # SwiftLint runs on Linux (x1 billing) instead of macOS (x10).
     runs-on: ${{ vars.LINUX_RUNNER && !github.event.pull_request.head.repo.fork && vars.LINUX_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
 
@@ -90,6 +93,7 @@ jobs:
     # label) in PRIVATE repositories only; never on a public repository.
     # Fork PRs always stay on the GitHub-hosted runner.
     runs-on: ${{ vars.MACOS_RUNNER && !github.event.pull_request.head.repo.fork && vars.MACOS_RUNNER || 'macos-latest' }}
+    timeout-minutes: 30
     env:
       SCHEME: Swift AI App Template
     steps:
@@ -127,6 +131,7 @@ jobs:
     needs: [changes, security, lint, build]
     if: always() && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
     runs-on: ${{ vars.LINUX_RUNNER && !github.event.pull_request.head.repo.fork && vars.LINUX_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 5
     steps:
       - name: Verify required jobs succeeded
         run: |
