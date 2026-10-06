@@ -78,6 +78,7 @@ Template optimized for small teams, AI-assisted development, and long-term maint
 - [ ] Run `make bootstrap` to install tools (pre-commit hooks are installed automatically)
 - [ ] Confirm `make test` passes
 - [ ] Confirm CI works in GitHub Actions (security / lint / test jobs)
+- [ ] If the new repository is **private**, set the `MACOS_RUNNER` repository variable to use the self-hosted macOS runner: `gh variable set MACOS_RUNNER --body macos-sh -R <owner>/<repo>` (if unset, CI runs on `macos-latest` at ~10x billing). Never set it on a public repository
 - [ ] Delete `ExampleFeature` once your first production feature is working (see [`CONTRIBUTING.md`](CONTRIBUTING.md))
 - [ ] If you use signed DMG distribution (`make deploy` / `make deploy-release` with `DEPLOY_DMG=true` in `.env`), replace `TEAM_ID` / `DEVELOPER_NAME` in the `Makefile` with your own values (leaving them blank makes `scripts/build-dmg.sh` fail)
 
