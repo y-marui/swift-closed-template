@@ -122,6 +122,8 @@ make bootstrap
 | `make format` | Run SwiftFormat |
 | `make test` | Run all tests |
 | `make build` | Generate the project with xcodegen and build via Xcode |
+| `make check-packages` | Warn if a newer `swift-app-monetization` exists (runs before `make build`) |
+| `make update-packages` | Update `swift-app-monetization` and clear stale build caches |
 | `make clean` | Clean build artifacts (`build/`, `.build/`) |
 
 `make build` generates the project with xcodegen and builds the macOS app into `build/`.
