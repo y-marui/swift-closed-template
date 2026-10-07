@@ -325,6 +325,21 @@ bundle identifier is not prefixed with the parent app's bundle identifier` エ�
 以前の規約は「macOS と iOS の Bundle ID を分け、Widget を SDK 条件で出し分ける」だったが、
 2026-09-21 に上記へ変更した。既存アプリは各リポジトリの `AI_CONTEXT.md` の Bundle ID 記述に従う。
 
+### 7. Privacy Manifest
+
+`App/PrivacyInfo.xcprivacy` は、App Store Connect へのアップロードに必要なプライバシーマニフェスト。
+`project.yml` で、アプリと拡張機能（Widget・Intents・Keyboard 等）の**全ターゲット**の `sources` に
+同じファイルを含める（ターゲットごとに複製しない）。iOS・Widget のターゲットをコメントアウト
+から有効にするときも、`- path: App/PrivacyInfo.xcprivacy` の行を一緒に有効にする。
+
+- 雛形は、トラッキングなし・収集データなし、`UserDefaults` の理由 `CA92.1`（アプリ自身の設定）と
+  `1C8F.1`（App Group で共有する設定）。このテンプレートの `AppGroup.swift` が `UserDefaults` を使うため
+- アプリで他の「理由の申告が必要な API」（ファイル日時・起動時間・ディスク容量・アクティブな
+  キーボード）を使うなら、該当するカテゴリと理由コードを追記する。使う API は、コードを検索して確認する
+- サードパーティの SDK（Google サインイン等）が収集するデータは、アプリのマニフェストではなく
+  App Store Connect の「アプリのプライバシー」の回答に影響する。SDK のマニフェストを確認する
+- 詳細は dev-charter の `topics/swift/SWIFT_DEV_ENV.md` の「Privacy Manifest」を参照する
+
 ---
 
 ## Steps to Remove Example Code
