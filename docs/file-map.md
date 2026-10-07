@@ -22,6 +22,7 @@
 | `App/macOS/App.swift` | macOS アプリエントリーポイント・ルートビュー |
 | `App/macOS/AppDependency.swift` | DI コンテナ |
 | `App/macOS/AppGroup.swift` | App Group ID と共有 `UserDefaults` |
+| `App/PrivacyInfo.xcprivacy` | プライバシーマニフェスト。アプリと拡張機能の全ターゲットで共有する。`UserDefaults` の使用理由を申告し、トラッキングと収集データはなし |
 
 ---
 

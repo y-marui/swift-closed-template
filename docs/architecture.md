@@ -155,3 +155,19 @@ AI支援開発（Claude Code, GitHub Copilot）を前提とした設計にする
 - Swinject などの DI フレームワーク: 手動 DI で十分なスケール感
 
 **影響範囲:** プロジェクト全体
+
+---
+
+### 2026-10-07: Add the Privacy Manifest to the Template
+
+**背景:** App Store Connect へのアップロードで、Apple が「理由の申告が必要な API」を使うアプリにプライバシーマニフェスト（`PrivacyInfo.xcprivacy`）を求める。7 つのアプリのどれにもマニフェストがなく、y-marui/swift-stick-mark#81 から順に追加した。今後作るアプリにも最初から含めるため、テンプレートに入れる。
+
+**決定:**
+- `App/PrivacyInfo.xcprivacy` を 1 つ追加し、`project.yml` の有効なターゲットと、コメントアウトされた iOS・Widget のターゲットの雛形の `sources` に含める。ターゲットごとに複製しない
+- 雛形は、トラッキングなし、収集データなし、`UserDefaults` の理由 `CA92.1` と `1C8F.1`（`App/macOS/AppGroup.swift` が App Group の `UserDefaults` を使うため）
+- 使い方は `DEVELOPING.md` の「Privacy Manifest」に書いた。一般方針は dev-charter の `topics/swift/SWIFT_DEV_ENV.md`（y-marui/dev-charter#186）
+
+**却下した選択肢:**
+- ターゲットごとに別々のマニフェストを置く: 内容が同じで、ずれる原因になる
+
+**影響範囲:** `App/PrivacyInfo.xcprivacy`（新規）、`project.yml`、`DEVELOPING.md`、`docs/file-map.md`、`CHANGELOG.md`
