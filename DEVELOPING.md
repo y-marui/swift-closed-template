@@ -246,6 +246,16 @@ xcodebuild -resolvePackageDependencies -project "[AppName].xcodeproj"
 
 ---
 
+### Updating swift-app-monetization
+
+共通パッケージ `swift-app-monetization` は、解決した版が `Package.resolved` とビルドキャッシュ（`build/SourcePackages`）に固定される。`branch: "main"` で依存していても、固定された版は自動では上がらず、古い課金ロジック（例: 試用が 1 か月のまま）でビルドしてしまうことがある。
+
+- `make build`（`make ios`・`make deploy` を含む）は、実行前に `scripts/check-package-updates.sh` で新しい版を確認し、あれば警告する
+- `make ios-release`・`make deploy-release` は、新しい版があるとエラーで止まる
+- `make update-packages` で、`Package.resolved` の更新と、古いビルドキャッシュの削除を行う。次のビルドで最新の版を取り込む
+- このパッケージに依存していない間は、どちらのスクリプトも何もしない。ネットワークに届かないときも、黙ってスキップする
+- タグ（`v0.1.0` 以降）で依存するようになったら、同じチェックが、新しいタグがあると警告する（依存の要件の範囲外のこともある）
+
 ## Debugging
 
 <!-- TODO: プロジェクト固有のデバッグ手順をここに記入する -->

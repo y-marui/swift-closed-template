@@ -122,6 +122,8 @@ make bootstrap
 | `make format` | SwiftFormat を実行 |
 | `make test` | 全テストを実行 |
 | `make build` | xcodegen でプロジェクトを生成し、Xcode でビルド |
+| `make check-packages` | `swift-app-monetization` の新しい版があれば警告（`make build` の前に実行される） |
+| `make update-packages` | `swift-app-monetization` を更新し、古いビルドキャッシュを削除 |
 | `make clean` | ビルド成果物を削除（`build/`、`.build/`） |
 
 `make build` は xcodegen でプロジェクトを生成し、macOS アプリを `build/` へビルドします。

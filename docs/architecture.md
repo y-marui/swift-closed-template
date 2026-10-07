@@ -171,3 +171,20 @@ AI支援開発（Claude Code, GitHub Copilot）を前提とした設計にする
 - ターゲットごとに別々のマニフェストを置く: 内容が同じで、ずれる原因になる
 
 **影響範囲:** `App/PrivacyInfo.xcprivacy`（新規）、`project.yml`、`DEVELOPING.md`、`docs/file-map.md`、`CHANGELOG.md`
+
+---
+
+### 2026-10-08: Warn About Stale Shared Packages
+
+**背景:** 共通パッケージ `swift-app-monetization` の解決した版は、`Package.resolved` と xcodebuild のビルドキャッシュ（`build/SourcePackages/workspace-state.json`）に固定され、`branch: "main"` でも自動では上がらない。今後、課金を組み込むときに同じ問題が起きないよう、あらかじめ入れておく（まだ依存していないため、スクリプトは何もしない）（y-marui/swift-stick-mark の 2026-10-08 の事例）。
+
+**決定:**
+- `scripts/check-package-updates.sh` を追加し、`git ls-remote` で最新の `main`（タグ運用になったら最新のタグ）を調べて、手元の固定された版と比べる。古ければ警告する。依存していない場合と、ネットワークに届かない場合は、何も表示せず正常終了する
+- `make build` の前に毎回実行する（`make ios`・`make deploy` は `build` を通る）。`make ios-release`・`make deploy-release` は `--strict` で、古い版ならエラーで止める。製品に古い課金ロジックが入るのを防ぐため
+- `scripts/update-packages.sh`（`make update-packages`）で、`Package.resolved` の更新と、古いビルドキャッシュの削除を行う。次のビルドで最新の版を取り込む
+- 常に最新を自動で取り込む案は採らず、警告と 1 コマンドの更新にする。ビルドのたびに依存が黙って変わると、共通パッケージの変更が、意図せず製品ビルドに入るため
+
+**却下した選択肢:**
+- ビルドの前に毎回、自動で最新へ更新する: 依存の更新が、ビルドの再現性を損なう。リリースビルドでは特に避けたい
+
+**影響範囲:** `scripts/check-package-updates.sh`（新規）、`scripts/update-packages.sh`（新規）、`Makefile`、`README.md`・`README-jp.md`、`DEVELOPING.md`

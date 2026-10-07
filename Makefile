@@ -1,4 +1,4 @@
-.PHONY: bootstrap lint format test ensure-xcode-project xcodegen build ios ios-release register-widget deploy deploy-release dmg clean update-charter unlock-keychain
+.PHONY: check-packages update-packages bootstrap lint format test ensure-xcode-project xcodegen build ios ios-release register-widget deploy deploy-release dmg clean update-charter unlock-keychain
 
 -include .env
 
@@ -39,11 +39,17 @@ ensure-xcode-project:
 		TEAM_ID="$(TEAM_ID)" xcodegen generate; \
 	fi
 
+check-packages:
+	@bash scripts/check-package-updates.sh
+
+update-packages:
+	@bash scripts/update-packages.sh
+
 xcodegen:
 	@command -v xcodegen >/dev/null 2>&1 || { echo "Error: xcodegen is not installed. Run 'make bootstrap'."; exit 1; }
 	TEAM_ID="$(TEAM_ID)" xcodegen generate
 
-build: ensure-xcode-project
+build: ensure-xcode-project check-packages
 	xcodebuild -project "$(XCODE_PROJECT)" -scheme "$(SCHEME)" -configuration Debug -destination "$(DESTINATION)" -derivedDataPath build -allowProvisioningUpdates DEVELOPMENT_TEAM="$(TEAM_ID)" build
 
 ios: ensure-xcode-project
@@ -53,6 +59,7 @@ ios: ensure-xcode-project
 	xcrun devicectl device install app --device "$(IOS_DEVICE_UDID)" "$(IOS_APP_PATH)"
 
 ios-release: ensure-xcode-project
+	@bash scripts/check-package-updates.sh --strict
 	@if [ -z "$(IOS_DEVICE_UDID)" ]; then echo "Error: IOS_DEVICE_UDID is not set. Set it in .env or pass IOS_DEVICE_UDID=<udid> to make."; exit 1; fi
 	xcodebuild -project "$(XCODE_PROJECT)" -scheme "$(IOS_SCHEME)" -configuration Release -destination "id=$(IOS_DEVICE_UDID)" -derivedDataPath build-release -allowProvisioningUpdates DEVELOPMENT_TEAM="$(TEAM_ID)" build
 	@test -d "$(IOS_RELEASE_APP_PATH)" || { echo "Error: Build output not found at '$(IOS_RELEASE_APP_PATH)'"; exit 1; }
@@ -78,6 +85,7 @@ endif
 	open "/Applications/$(APP_NAME).app"
 
 deploy-release: ensure-xcode-project
+	@bash scripts/check-package-updates.sh --strict
 	xcodebuild -project "$(XCODE_PROJECT)" -scheme "$(SCHEME)" -configuration Release -destination "$(DESTINATION)" -derivedDataPath build-release -allowProvisioningUpdates DEVELOPMENT_TEAM="$(TEAM_ID)" build
 	@if pgrep -x "$(APP_NAME)" >/dev/null; then osascript -e 'tell application "$(APP_NAME)" to quit'; fi
 	rm -rf "/Applications/$(APP_NAME).app"
