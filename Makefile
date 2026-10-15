@@ -11,6 +11,14 @@ TEAM_ID ?=
 DEVELOPER_NAME ?= Yukihiro Marui
 DEPLOY_DMG ?= false
 DMG_DEST ?=
+# Self-made apps live in their own folder, apart from /Applications itself, so they never
+# collide with an App Store version of the same name. Set DEPLOY_DIR=/Applications in .env (or
+# on the command line) to install directly under /Applications. DMGs for install-my-apps go to
+# ~/Library/Mobile Documents/com~apple~CloudDocs/Build/Swift (set DMG_DEST in .env).
+DEPLOY_DIR ?= /Applications/My Swift
+# Temporary migration measure: remove an old copy directly under /Applications on deploy.
+# Switch to false once every Mac is migrated (the logic stays in scripts/install-app.sh).
+MIGRATE_OLD ?= true
 IOS_SCHEME ?= Swift AI App Template iOS
 IOS_PRODUCT_NAME ?= Swift AI App Template
 IOS_DEVICE_UDID ?=
@@ -73,25 +81,22 @@ ifeq ($(DEPLOY_DMG),true)
 	CONFIGURATION=Debug $(MAKE) -s dmg
 	@if mount | grep -Fq "on $(DEPLOY_MOUNT) "; then hdiutil detach "$(DEPLOY_MOUNT)"; fi
 	hdiutil attach "dist/$(APP_NAME).dmg" -mountpoint "$(DEPLOY_MOUNT)" -quiet
-	rm -rf "/Applications/$(APP_NAME).app"
-	cp -Rp "$(DEPLOY_MOUNT)/$(APP_NAME).app" "/Applications/$(APP_NAME).app"
+	bash scripts/install-app.sh "$(DEPLOY_MOUNT)/$(APP_NAME).app" "$(DEPLOY_DIR)" "$(APP_NAME)" "$(MIGRATE_OLD)"
 	hdiutil detach "$(DEPLOY_MOUNT)" -quiet
 else
 	$(MAKE) -s build
-	rm -rf "/Applications/$(APP_NAME).app"
-	ditto "build/Build/Products/Debug/$(APP_NAME).app" "/Applications/$(APP_NAME).app"
+	bash scripts/install-app.sh "build/Build/Products/Debug/$(APP_NAME).app" "$(DEPLOY_DIR)" "$(APP_NAME)" "$(MIGRATE_OLD)"
 endif
 	@if [ -n "$(WIDGET_TARGET)" ]; then $(MAKE) -s register-widget; fi
-	open "/Applications/$(APP_NAME).app"
+	open "$(DEPLOY_DIR)/$(APP_NAME).app"
 
 deploy-release: ensure-xcode-project
 	@bash scripts/check-package-updates.sh --strict
 	xcodebuild -project "$(XCODE_PROJECT)" -scheme "$(SCHEME)" -configuration Release -destination "$(DESTINATION)" -derivedDataPath build-release -allowProvisioningUpdates DEVELOPMENT_TEAM="$(TEAM_ID)" build
 	@if pgrep -x "$(APP_NAME)" >/dev/null; then osascript -e 'tell application "$(APP_NAME)" to quit'; fi
-	rm -rf "/Applications/$(APP_NAME).app"
-	ditto "build-release/Build/Products/Release/$(APP_NAME).app" "/Applications/$(APP_NAME).app"
+	bash scripts/install-app.sh "build-release/Build/Products/Release/$(APP_NAME).app" "$(DEPLOY_DIR)" "$(APP_NAME)" "$(MIGRATE_OLD)"
 	@if [ -n "$(WIDGET_TARGET)" ]; then $(MAKE) -s register-widget; fi
-	open "/Applications/$(APP_NAME).app"
+	open "$(DEPLOY_DIR)/$(APP_NAME).app"
 	@if [ "$(DEPLOY_DMG)" = "true" ]; then CONFIGURATION=Release $(MAKE) -s dmg; fi
 
 dmg: ensure-xcode-project
