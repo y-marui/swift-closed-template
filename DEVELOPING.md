@@ -256,6 +256,15 @@ xcodebuild -resolvePackageDependencies -project "[AppName].xcodeproj"
 - このパッケージに依存していない間は、どちらのスクリプトも何もしない。ネットワークに届かないときも、黙ってスキップする
 - タグ（`v0.1.0` 以降）で依存するようになったら、同じチェックが、新しいタグがあると警告する（依存の要件の範囲外のこともある）
 
+## Deploy Folder
+
+`make deploy` と `make deploy-release` は、アプリを `/Applications` 直下ではなく `DEPLOY_DIR`（既定は `/Applications/My Swift`）に入れる。自作アプリが増えても `/Applications` 直下が散らからず、App Store 版と同名でも衝突しないため。インストールは `scripts/install-app.sh` が行い、確認は `scripts/test-install-app.sh`（一時フォルダだけを使う）で行う。
+
+- 入れ先を変えるには、`.env`（または `make deploy DEPLOY_DIR=...`）で `DEPLOY_DIR` を指定する。`/Applications` 直下に入れたいときは `DEPLOY_DIR=/Applications` とする（このとき旧い場所の整理は行わない）
+- `install-my-apps`（dotfiles）が読む DMG は、iCloud の `Build/Swift` に置く。`.env` の `DMG_DEST` を `~/Library/Mobile Documents/com~apple~CloudDocs/Build/Swift` にする。`Build` 直下に置いた DMG は、`install-my-apps` が Swift として扱うが、`make dmg` は移すよう注意を出す
+- ウィジェットを持つアプリは、`Makefile` の `WIDGET_APPEX` を `$(DEPLOY_DIR)/<App>.app/Contents/PlugIns/...` で書く
+- `MIGRATE_OLD`（既定 `true`）は、移行期間の措置。`/Applications` 直下に残っている旧い同じアプリを、デプロイ時に削除する。削除するのは、デプロイ先に同名のアプリがなく、App Store 版でなく、バンドル ID が同じときだけ。デプロイ先と旧い場所の両方にあるときは削除せず知らせる。全 Mac の移行が済んだら `false` にする（ロジックは残す）
+
 ## Debugging
 
 <!-- TODO: プロジェクト固有のデバッグ手順をここに記入する -->

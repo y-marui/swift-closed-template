@@ -115,6 +115,9 @@ echo "Built: ${DMG_PATH}"
 
 if [[ -n "${DMG_DEST}" ]]; then
     DEST_DIR="${DMG_DEST/#\~/$HOME}"
+    if [[ "$(basename "${DEST_DIR}")" == "Build" ]]; then
+        echo "Note: DMGs go to Build/Swift now (set DMG_DEST=.../Build/Swift in .env). A DMG left in Build is still installed as a Swift app, but please move it." >&2
+    fi
     mkdir -p "${DEST_DIR}"
     cp "${DMG_PATH}" "${DEST_DIR}/${DMG_NAME}"
     echo "Copied to: ${DEST_DIR}/${DMG_NAME}"

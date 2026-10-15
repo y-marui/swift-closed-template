@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- `make deploy` / `make deploy-release` の入れ先を `/Applications` 直下から `DEPLOY_DIR`（既定 `/Applications/My Swift`）に変更。インストールは `scripts/install-app.sh` に切り出し、`scripts/test-install-app.sh` を追加した。DMG の公開先は iCloud の `Build/Swift`（`.env.example` の `DMG_DEST`）。入れ先は `.env` の `DEPLOY_DIR`（`/Applications` 直下に戻すこともできる）で変えられる。旧い場所の同じアプリを消す `MIGRATE_OLD` は移行期間の措置で既定 `true`（デプロイ先にも同名があるとき、App Store 版、バンドル ID が違うときは消さない）
 - 共通パッケージ `swift-app-monetization` の新しい版を警告するチェック（`scripts/check-package-updates.sh`、`make check-packages`）と、更新用の `make update-packages` を追加した。`make build` の前に毎回実行し、`make ios-release`・`make deploy-release` は古い版だとエラーで止まる。依存していない間は何もしない（`DEVELOPING.md`、y-marui/swift-stick-mark の 2026-10-08 の事例）
 - プライバシーマニフェスト（`App/PrivacyInfo.xcprivacy`）を追加し、`project.yml` の全ターゲット（コメントアウトされた iOS・Widget の雛形を含む）で共有する。`DEVELOPING.md` に「Privacy Manifest」を追加した（y-marui/swift-stick-mark#81、y-marui/dev-charter#186）
 - `bundle:` を取る `Button`・`Label`・`Section`・`Picker`・`Toggle`・`TextField`・`ProgressView` のイニシャライザ（`Shared/LocalizedViews.swift`）と、ビュー外の文言用の `AppLanguage.localizedString(_:bundle:)` を追加した。7 アプリへの展開で、`String(localized:)` が言語設定に従わない箇所が多く見つかったため（dev-charter の `topics/swift/SWIFT_LOCALIZATION.md`）
