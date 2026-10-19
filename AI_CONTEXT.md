@@ -1,7 +1,16 @@
 # AI Context
 
 このファイルを最初に読み、すべての実装判断の基準にしてください。
+
+## Charter Lookup
+
 憲章参照: `docs/dev-charter/CHARTER_INDEX.md` でトピックを特定してから該当ファイルのみ読む
+
+次の変更を始める前に、該当トピックを確認する: UI・ローカライズ・CI/ワークフロー・リリース・依存関係・ライセンス・PR/ブランチ運用。
+
+1. `docs/dev-charter/CHARTER_INDEX.md` を読み、該当トピックのファイルを特定する
+2. 特定したファイル（原則 1〜2 件）のみを読む
+3. 参照後にユーザーへ提案・確認を行う
 
 ## Context Priority
 
