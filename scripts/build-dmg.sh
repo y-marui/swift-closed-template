@@ -95,11 +95,12 @@ ln -s /Applications "${STAGING_DIR}/Applications"
 mkdir -p "${DIST_DIR}"
 DMG_PATH="${DIST_DIR}/${DMG_NAME}"
 
-hdiutil create \
-    -volname "${APP_NAME}" \
-    -srcfolder "${STAGING_DIR}" \
-    -ov \
-    -format UDZO \
+# diskutil image create は上書きしないため、先に既存の DMG を削除する
+rm -f "${DMG_PATH}"
+diskutil image create from \
+    --volumeName "${APP_NAME}" \
+    --format UDZO \
+    "${STAGING_DIR}" \
     "${DMG_PATH}"
 
 rm -rf "${STAGING_DIR}"
