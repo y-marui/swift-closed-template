@@ -236,7 +236,7 @@ make test
 
 ## AI-Assisted Development
 
-このテンプレートは Claude Code・Codex・GitHub Copilot・Gemini CLI に最適化されています。
+このテンプレートは Claude Code・Codex・GitHub Copilot に最適化されています。
 AI が従うべきルールとパターンは [`AI_CONTEXT.md`](AI_CONTEXT.md) を参照してください。
 
 ---
