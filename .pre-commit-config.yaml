@@ -67,7 +67,7 @@ repos:
         entry: '(/Users/[A-Za-z0-9_.-]+/|/home/[A-Za-z0-9_.-]+/|C:\\Users\\)'
         types_or: [text]
         # Note: exclude はファイル「パス」に対するマッチ。
-        # セキュリティ設定ファイル自体は CI パス等を allowlist として含むため除外する。
+        # 設定ファイル自身（allowlist パターンを含む）は除外する。
         exclude: |
           (?x)(
             \.md$|
@@ -78,6 +78,20 @@ repos:
           )
 
   # ----------------------------------------------------------------
+  # Block commits on the default branch
+  # (server-side Ruleset only stops direct pushes; this catches local
+  # commits onto main/master before that point — see CI_POLICY.md
+  # Branch Protection (Ruleset))
+  # ----------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: check-not-on-default-branch
+        name: Block commits on the default branch
+        language: script
+        entry: scripts/check-not-on-default-branch.sh
+        pass_filenames: false
+        always_run: true
+
 
   # ----------------------------------------------------------------
   # Local dev-charter version check
@@ -108,17 +122,19 @@ repos:
         always_run: true
 
   # ----------------------------------------------------------------
-  # Block commits on the default branch
-  # (server-side Ruleset only stops direct pushes; this catches local
-  # commits onto main/master before that point — see CI_POLICY.md
-  # Branch Protection (Ruleset))
+  # UPDATE_CHECKLIST sign check (pre-push only)
+  # (a diff that only touches the dev-charter subtree must carry a
+  # `Update-Checklist: done` trailer commit, or also change a file outside
+  # the subtree. Not run at commit time: `git subtree pull` commits only
+  # touch the subtree. Needs `pre-commit install --hook-type pre-push`)
   # ----------------------------------------------------------------
   - repo: local
     hooks:
-      - id: check-not-on-default-branch
-        name: Block commits on the default branch
+      - id: check-update-checklist
+        name: Check UPDATE_CHECKLIST was run
         language: script
-        entry: scripts/check-not-on-default-branch.sh
+        entry: scripts/check-update-checklist.sh
+        stages: [pre-push]
         pass_filenames: false
         always_run: true
 
@@ -199,6 +215,20 @@ repos:
         name: Check AI_CONTEXT.md reference
         language: script
         entry: scripts/check-ai-context-reference.sh
+        pass_filenames: false
+        always_run: true
+
+  # ----------------------------------------------------------------
+  # Hook script existence (SECURITY_POLICY.md)
+  # (scripts referenced by entry: must exist and be executable, and
+  # helper scripts installed as a pair with a hook must be present)
+  # ----------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: check-hook-scripts
+        name: Check hook scripts exist
+        language: script
+        entry: scripts/check-hook-scripts.sh
         pass_filenames: false
         always_run: true
 
