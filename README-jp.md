@@ -239,5 +239,9 @@ make test
 このテンプレートは Claude Code・Codex・GitHub Copilot に最適化されています。
 AI が従うべきルールとパターンは [`AI_CONTEXT.md`](AI_CONTEXT.md) を参照してください。
 
+## License
+
+All Rights Reserved — [LICENSE](LICENSE)
+
 ---
 *この文書には英語版 [README.md](README.md) があります。編集時は同一コミットで更新してください。*
