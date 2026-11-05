@@ -239,5 +239,9 @@ make test
 This template is optimized for Claude Code, Codex, and GitHub Copilot.
 See [`AI_CONTEXT.md`](AI_CONTEXT.md) for rules and patterns the AI should follow.
 
+## License
+
+All Rights Reserved — [LICENSE](LICENSE)
+
 ---
 *This document has a Japanese canonical version [README-jp.md](README-jp.md). Update both in the same commit when editing.*
